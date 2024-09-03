@@ -4,10 +4,13 @@ namespace BasicLibrary
 {
     internal class Program
     {
-        static List<(string BName, string BAuthor, int ID)> Books = new List<(string BName, string BAuthor, int ID)>();    
+        static List<(string BName, string BAuthor, int ID)> Books = new List<(string BName, string BAuthor, int ID)>();
+        static string filePath = "C:\\Users\\Karim\\Downloads\\OutSystem_Course\\GitHubRepos\\Data\\lib.txt";
 
         static void Main(string[] args)
         {
+            bool ExitFlag = false;
+            LoadBooksFromFile();
             do
             {
                 Console.WriteLine("Welcome to Lirary");
@@ -34,7 +37,8 @@ namespace BasicLibrary
                         break;
 
                     case "D":
-                        //SaveToFile();
+                        SaveBooksToFile();
+                        ExitFlag = true;
                         break;
 
                     default:
@@ -50,7 +54,7 @@ namespace BasicLibrary
 
                 Console.Clear();
 
-            } while (true);
+            } while (ExitFlag != true);
         }
         static void AddnNewBook() 
         { 
@@ -108,9 +112,52 @@ namespace BasicLibrary
             if (flag != true)
             { Console.WriteLine("book not found"); }
         }
-            //SearchForBook() { }
-            //SaveToFile() { }
-            //ReadFromFile() { }
 
+        static void LoadBooksFromFile()
+        {
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    using (StreamReader reader = new StreamReader(filePath))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            var parts = line.Split('|');
+                            if (parts.Length == 3)
+                            {
+                                Books.Add((parts[0], parts[1], int.Parse(parts[2])));
+                            }
+                        }
+                    }
+                    Console.WriteLine("Books loaded from file successfully.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading from file: {ex.Message}");
+            }
         }
+
+        static void SaveBooksToFile()
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(filePath))
+                {
+                    foreach (var book in Books)
+                    {
+                        writer.WriteLine($"{book.BName}|{book.BAuthor}|{book.ID}");
+                    }
+                }
+                Console.WriteLine("Books saved to file successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving to file: {ex.Message}");
+            }
+        }
+
+    }
 }
