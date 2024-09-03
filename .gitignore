@@ -7,6 +7,10 @@
 /obj/Debug/net8.0/ref
 /obj/Debug/net8.0/refint
 /.vs
-/bin/Debug/net8.0
+/bin
 /obj
 
+/obj/Debug/net8.0/BasicLibrary.AssemblyInfo.cs
+/obj/Debug/net8.0/BasicLibrary.AssemblyInfoInputs.cache
+/.vs/BasicLibrary/v17/DocumentLayout.json
+/.vs/BasicLibrary/FileContentIndex/1a3d56d5-4ae8-4e04-8054-07194d1ad2ff.vsidx
