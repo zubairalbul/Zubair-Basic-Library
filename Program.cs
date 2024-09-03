@@ -30,7 +30,7 @@ namespace BasicLibrary
                         break;
 
                     case "C":
-                        // SearchForBook();
+                        SearchForBook();
                         break;
 
                     case "D":
@@ -86,6 +86,26 @@ namespace BasicLibrary
                 Console.WriteLine(sb.ToString());
 
             }
+        }
+
+        static void SearchForBook()
+        {
+            Console.WriteLine("Enter the book name you want");
+            string name = Console.ReadLine();  
+            bool flag=false;
+
+            for(int i = 0; i< Books.Count;i++)
+            {
+                if (Books[i].BName == name)
+                {
+                    Console.WriteLine("Book Author is : " + Books[i].BAuthor);
+                    flag = true;
+                    break;
+                }
+            }
+
+            if (flag != true)
+            { Console.WriteLine("book not found"); }
         }
             //SearchForBook() { }
             //SaveToFile() { }
