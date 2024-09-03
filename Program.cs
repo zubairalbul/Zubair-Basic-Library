@@ -84,6 +84,7 @@ namespace BasicLibrary
                 sb.Append("Book ").Append(BookNumber).Append(" ID : ").Append(Books[i].ID);
                 sb.AppendLine().AppendLine();
                 Console.WriteLine(sb.ToString());
+                sb.Clear();
 
             }
         }
