@@ -1,0 +1,12 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/BasicLibrary/DesignTimeBuild/.dtbcache.v2
+/.vs/BasicLibrary/v17/.suo
+/obj/Debug/net8.0/ref
+/obj/Debug/net8.0/refint
+/.vs
+/bin/Debug/net8.0
+/obj
+
