@@ -1,4 +1,6 @@
-﻿namespace BasicLibrary
+﻿using System.Text;
+
+namespace BasicLibrary
 {
     internal class Program
     {
@@ -6,43 +8,49 @@
 
         static void Main(string[] args)
         {
-
-            Console.WriteLine("Welcome to Lirary");
-            Console.WriteLine("\n Enter the char of operation you need :");
-            Console.WriteLine("\n A- Add New Book");
-            Console.WriteLine("\n B- Display All Books");
-            Console.WriteLine("\n C- Search for Book by Name");
-            Console.WriteLine("\n D- Save and Exit");
-
-            string choice = Console.ReadLine() ;
-
-            switch(choice)
+            do
             {
-                case "A":
-                    AddnNewBook();
-                    break;
+                Console.WriteLine("Welcome to Lirary");
+                Console.WriteLine("\n Enter the char of operation you need :");
+                Console.WriteLine("\n A- Add New Book");
+                Console.WriteLine("\n B- Display All Books");
+                Console.WriteLine("\n C- Search for Book by Name");
+                Console.WriteLine("\n D- Save and Exit");
 
-                case "B":
-                    //ViewAllBooks();
-                    break;  
+                string choice = Console.ReadLine();
 
-                case "C":
-                   // SearchForBook();
-                    break;  
+                switch (choice)
+                {
+                    case "A":
+                        AddnNewBook();
+                        break;
 
-                case "D":
-                    //SaveToFile();
-                    break;
+                    case "B":
+                        ViewAllBooks();
+                        break;
 
-               default:
-                    Console.WriteLine("Sorry your choice was wrong");
-                    break;
+                    case "C":
+                        // SearchForBook();
+                        break;
+
+                    case "D":
+                        //SaveToFile();
+                        break;
+
+                    default:
+                        Console.WriteLine("Sorry your choice was wrong");
+                        break;
 
 
 
-            }
+                }
 
+                Console.WriteLine("press any key to continue");
+                string cont = Console.ReadLine();
 
+                Console.Clear();
+
+            } while (true);
         }
         static void AddnNewBook() 
         { 
@@ -60,7 +68,20 @@
 
         }
 
-        //ViewAllBooks() { }
+        static void ViewAllBooks() 
+        {
+            int BookNumber;
+
+          for(int i = 0; i<Books.Count;i++)
+            {
+                BookNumber = i + 1;
+                Console.WriteLine( "Book "+ BookNumber + " : name "+Books[i].BName);
+                Console.WriteLine("Book " + BookNumber + " : Author " + Books[i].BAuthor);
+                Console.WriteLine("Book " + BookNumber + " : ID " + Books[i].ID+"\n\n");               
+
+            }
+        
+        }
         //SearchForBook() { }
         //SaveToFile() { }
         //ReadFromFile() { }
