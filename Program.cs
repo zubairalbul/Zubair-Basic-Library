@@ -68,23 +68,28 @@ namespace BasicLibrary
 
         }
 
-        static void ViewAllBooks() 
+        static void ViewAllBooks()
         {
-            int BookNumber;
+            StringBuilder sb = new StringBuilder();
 
-          for(int i = 0; i<Books.Count;i++)
-            {
+            int BookNumber = 0;
+
+            for (int i = 0; i < Books.Count; i++)
+            {             
                 BookNumber = i + 1;
-                Console.WriteLine( "Book "+ BookNumber + " : name "+Books[i].BName);
-                Console.WriteLine("Book " + BookNumber + " : Author " + Books[i].BAuthor);
-                Console.WriteLine("Book " + BookNumber + " : ID " + Books[i].ID+"\n\n");               
+                sb.Append("Book ").Append(BookNumber).Append(" name : ").Append(Books[i].BName);
+                sb.AppendLine();
+                sb.Append("Book ").Append(BookNumber).Append(" Author : ").Append(Books[i].BAuthor);
+                sb.AppendLine();
+                sb.Append("Book ").Append(BookNumber).Append(" ID : ").Append(Books[i].ID);
+                sb.AppendLine().AppendLine();
+                Console.WriteLine(sb.ToString());
 
             }
-        
         }
-        //SearchForBook() { }
-        //SaveToFile() { }
-        //ReadFromFile() { }
+            //SearchForBook() { }
+            //SaveToFile() { }
+            //ReadFromFile() { }
 
-    }
+        }
 }
