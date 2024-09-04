@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Design;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace BasicLibrary
@@ -109,6 +110,23 @@ namespace BasicLibrary
                     case 1:
                         Console.Clear();
                         SearchForBook();
+                        Console.WriteLine("Do You want to Borrow it? \n 1. Yes \n 2. No");
+                        int UserChoice=int.Parse(Console.ReadLine());
+                        if (UserChoice == 1)
+                        {
+                            for (int i = 0; i < Books.Count; i++)
+                            {
+                                {
+                                    Books[i] = (Books[i].BName, Books[i].BAuthor, Books[i].ID, Books[i].Qnt - 1);
+
+                                    SaveBooksToFile();
+                                }
+                            }
+                        }
+                        else
+                            Console.WriteLine("Thank you For Your Time");
+
+                        
                         break;
 
                     case 2:
@@ -119,6 +137,7 @@ namespace BasicLibrary
                     case 3:
                         Console.Clear();
                         BorrowBook();
+                        
                         break;
                     case 4:
                         Console.Clear();
@@ -150,6 +169,7 @@ namespace BasicLibrary
                 int Qnt = int.Parse(Console.ReadLine());
 
                 Books.Add(( name, author, ID, Qnt ));
+
                   Console.WriteLine("Book Added Succefully");
 
 
@@ -218,6 +238,7 @@ namespace BasicLibrary
 
                         }
                     }
+                   
                     Console.WriteLine("Books loaded from file successfully.");
                 }
             }
@@ -255,19 +276,20 @@ namespace BasicLibrary
             {
                 if (BookName == Books[i].BName)
                 {
-                    Console.WriteLine("Book Founded");
+                    Console.WriteLine("Book name "+ Books[i].BName +  "\t Book ID: " + Books[i].ID);
                     Console.WriteLine("Borrow? \n 1. Yes \n 2. No");
                     int CS = int.Parse(Console.ReadLine());
                     if (CS == 1)
                     {
-                        Books[i] = (Books[i].BName, Books[i].BAuthor, Books[i].ID, Books[i].Qnt-1);
-                        Console.WriteLine("Borrowing Was Succesfully Done.");
+                        Books[i] = (Books[i].BName, Books[i].BAuthor, Books[i].ID, Books[i].Qnt - 1);
+
                         SaveBooksToFile();
+                        Console.WriteLine("Borrowing Was Succesfully Done.");
                     }
                     else
                         break;
                 }
-                else
+                else if (BookName != Books[i].BName)
                 {
                     Console.WriteLine("The Book Is Not Available Right Now");
                     break;
