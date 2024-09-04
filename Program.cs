@@ -1,15 +1,17 @@
-﻿using System.Text;
+﻿using System.ComponentModel.Design;
+using System.Text;
 
 namespace BasicLibrary
 {
     internal class Program
     {
         static List<(string BName, string BAuthor, int ID, int Qnt)> Books = new List<(string BName, string BAuthor, int ID, int Qnt)>();
-        static string filePath = "C:\\Users\\Codeline User\\Desktop\\Zubair";
+        static string filePath = "C:\\Users\\Codeline User\\Desktop\\Zubair\\Lib.txt";
 
         
         static void Main(string[] args)
         {
+           LoadBooksFromFile();
            bool EnterFlag=false;
             SaveBooksToFile();
             do
@@ -42,8 +44,8 @@ namespace BasicLibrary
             bool ExitFlag = false;
             do
             {
-                Console.WriteLine("Welcome to Lirary");
-                Console.WriteLine("\n Enter the char of operation you need :");
+                Console.WriteLine("Welcome to Library");
+                Console.WriteLine("\n Select the Option :");
                 Console.WriteLine("\n 1- Add New Book");
                 Console.WriteLine("\n 2- Display All Books");
                 Console.WriteLine("\n 3- Search for Book by Name");
@@ -55,6 +57,7 @@ namespace BasicLibrary
                 {
                     case 1:
                         AddnNewBook();
+                        SaveBooksToFile(); 
                         break;
 
                     case 2:
@@ -74,7 +77,7 @@ namespace BasicLibrary
                         Console.WriteLine("Sorry your choice was wrong");
                         break;
 
-
+                   
 
                 }
 
@@ -110,17 +113,9 @@ namespace BasicLibrary
                         ViewAllBooks();
                         break;
 
-                  /*  case 3:
-                        //BorrowBook
+                    case 3: 
+                        BorrowBook();
                         break;
-
-                    case 4:
-                        // ReturnBook();
-                        ExitFlag = true;
-                        break;
-                    case 5:
-                        
-                        break;*/
 
                     default:
                         Console.WriteLine("Sorry your choice was wrong");
@@ -132,6 +127,7 @@ namespace BasicLibrary
         }
         static void AddnNewBook() 
         { 
+
                  Console.WriteLine("Enter Book Name");
                  string name = Console.ReadLine();   
 
@@ -146,6 +142,7 @@ namespace BasicLibrary
 
                 Books.Add(( name, author, ID, Qnt ));
                   Console.WriteLine("Book Added Succefully");
+
 
         }
 
@@ -163,7 +160,10 @@ namespace BasicLibrary
                 sb.Append("Book ").Append(BookNumber).Append(" Author : ").Append(Books[i].BAuthor);
                 sb.AppendLine();
                 sb.Append("Book ").Append(BookNumber).Append(" ID : ").Append(Books[i].ID);
-                sb.AppendLine().AppendLine();
+                sb.AppendLine();
+                sb.Append("Book ").Append(BookNumber).Append(" Quantity : ").Append(Books[i].Qnt);
+                sb.AppendLine();
+                sb.AppendLine();
                 Console.WriteLine(sb.ToString());
                 sb.Clear();
 
@@ -206,6 +206,7 @@ namespace BasicLibrary
                             {
                                 Books.Add((parts[0], parts[1], int.Parse(parts[2]), int.Parse(parts[3])));
                             }
+
                         }
                     }
                     Console.WriteLine("Books loaded from file successfully.");
@@ -215,6 +216,7 @@ namespace BasicLibrary
             {
                 Console.WriteLine($"Error loading from file: {ex.Message}");
             }
+
         }
 
         static void SaveBooksToFile()
@@ -235,7 +237,34 @@ namespace BasicLibrary
                 Console.WriteLine($"Error saving to file: {ex.Message}");
             }
         }
-       // static void BorrowBook() { }
+        static void BorrowBook() 
+        { 
+           ViewAllBooks();
+            Console.Write("Please Enter The Book Name Want To Borrow: ");
+            string BookName=Console.ReadLine();
+            for (int i = 0; i < Books.Count; i++)
+            {
+                if (BookName == Books[i].BName)
+                {
+                    Console.WriteLine("Book Founded");
+                    Console.WriteLine("Borrow? \n 1. Yes \n 2. No");
+                    int CS = int.Parse(Console.ReadLine());
+                    if (CS == 1)
+                    {
+                        Books[i] = (Books[i].BName, Books[i].BAuthor, Books[i].ID, Books[i].Qnt-1);
+                        Console.WriteLine("Borrowing Was Succesfully Done.");
+                        SaveBooksToFile();
+                    }
+                    else
+                        break;
+                }
+                else
+                {
+                    Console.WriteLine("The Book Is Not Available Right Now");
+                    break;
+                }
+            }
+        }
         
 
     }
