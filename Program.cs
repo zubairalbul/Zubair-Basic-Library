@@ -90,10 +90,11 @@ namespace BasicLibrary
         }
         static void UserMenu()
         {
+            Console.WriteLine("Welcome to Library");
             bool ExitFlag = false;
             do
             {
-                Console.WriteLine("Welcome to Lirary");
+                
                 Console.WriteLine("\n Please Select An Option :");
                 Console.WriteLine("\n 1. Search For Book");
                 Console.WriteLine("\n 2. Display Available Books");
@@ -106,18 +107,26 @@ namespace BasicLibrary
                 switch (choice)
                 {
                     case 1:
-                         SearchForBook();
+                        Console.Clear();
+                        SearchForBook();
                         break;
 
                     case 2:
+                        Console.Clear();
                         ViewAllBooks();
                         break;
 
-                    case 3: 
+                    case 3:
+                        Console.Clear();
                         BorrowBook();
+                        break;
+                    case 4:
+                        Console.Clear();
+                        ReturnBook();
                         break;
 
                     default:
+                        Console.Clear();
                         Console.WriteLine("Sorry your choice was wrong");
                         break;
 
@@ -180,7 +189,7 @@ namespace BasicLibrary
             {
                 if (Books[i].BName == name)
                 {
-                    Console.WriteLine("Book Author is : " + Books[i].BAuthor);
+                    Console.WriteLine("Book Author is : " + Books[i].BAuthor + "Book ID: "+ Books[i].ID);
                     flag = true;
                     break;
                 }
@@ -253,6 +262,35 @@ namespace BasicLibrary
                     {
                         Books[i] = (Books[i].BName, Books[i].BAuthor, Books[i].ID, Books[i].Qnt-1);
                         Console.WriteLine("Borrowing Was Succesfully Done.");
+                        SaveBooksToFile();
+                    }
+                    else
+                        break;
+                }
+                else
+                {
+                    Console.WriteLine("The Book Is Not Available Right Now");
+                    break;
+                }
+            }
+        }
+        static void ReturnBook() 
+        {
+            Console.Write("Please Enter The Book Name: ");
+            string BookName = Console.ReadLine();
+            Console.Write("Enter The Book ID: ");
+            int BID = int.Parse(Console.ReadLine());
+            for (int i = 0; i < Books.Count; i++)
+            {
+                if (BookName == Books[i].BName && BID == Books[i].ID)
+                {
+                    Console.WriteLine("Book ID and Name Is Correct");
+                    Console.WriteLine("Return? \n 1. Yes \n 2. No");
+                    int CS = int.Parse(Console.ReadLine());
+                    if (CS == 1)
+                    {
+                        Books[i] = (Books[i].BName, Books[i].BAuthor, Books[i].ID, Books[i].Qnt + 1);
+                        Console.WriteLine("Returning Book Was Succesfully Done.");
                         SaveBooksToFile();
                     }
                     else
