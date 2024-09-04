@@ -4,40 +4,68 @@ namespace BasicLibrary
 {
     internal class Program
     {
-        static List<(string BName, string BAuthor, int ID)> Books = new List<(string BName, string BAuthor, int ID)>();
-        static string filePath = "C:\\Users\\Karim\\Downloads\\OutSystem_Course\\GitHubRepos\\Data\\lib.txt";
+        static List<(string BName, string BAuthor, int ID, int Qnt)> Books = new List<(string BName, string BAuthor, int ID, int Qnt)>();
+        static string filePath = "C:\\Users\\Codeline User\\Desktop\\Zubair";
 
-        // Test Checkout
+        
         static void Main(string[] args)
-        {// downloaded form ahmed device 
+        {
+           bool EnterFlag=false;
+            SaveBooksToFile();
+            do
+            {
+                Console.WriteLine("Please Select an option: ");
+                Console.WriteLine("1. Owner. \n 2. User. \n 3. Exit ");
+                int Choice=int.Parse(Console.ReadLine());
+                switch (Choice)
+                {
+                    case 1:
+                        AdminMenu();
+                        break;
+                    case 2:
+                        UserMenu();
+                        break;
+                    case 3:
+                        SaveBooksToFile();
+                        break;
+                    default:
+                        Console.WriteLine("Please Select an valid Option");
+                        break;
+
+                }
+                
+            } while (EnterFlag != true);  
+            Console.Clear();
+        }
+        static void AdminMenu()
+        {
             bool ExitFlag = false;
-            LoadBooksFromFile();
             do
             {
                 Console.WriteLine("Welcome to Lirary");
                 Console.WriteLine("\n Enter the char of operation you need :");
-                Console.WriteLine("\n A- Add New Book");
-                Console.WriteLine("\n B- Display All Books");
-                Console.WriteLine("\n C- Search for Book by Name");
-                Console.WriteLine("\n D- Save and Exit");
+                Console.WriteLine("\n 1- Add New Book");
+                Console.WriteLine("\n 2- Display All Books");
+                Console.WriteLine("\n 3- Search for Book by Name");
+                Console.WriteLine("\n 4- Save and Exit");
 
-                string choice = Console.ReadLine();
+                int choice = int.Parse(Console.ReadLine());
 
                 switch (choice)
                 {
-                    case "A":
+                    case 1:
                         AddnNewBook();
                         break;
 
-                    case "B":
+                    case 2:
                         ViewAllBooks();
                         break;
 
-                    case "C":
+                    case 3:
                         SearchForBook();
                         break;
 
-                    case "D":
+                    case 4:
                         SaveBooksToFile();
                         ExitFlag = true;
                         break;
@@ -57,6 +85,51 @@ namespace BasicLibrary
 
             } while (ExitFlag != true);
         }
+        static void UserMenu()
+        {
+            bool ExitFlag = false;
+            do
+            {
+                Console.WriteLine("Welcome to Lirary");
+                Console.WriteLine("\n Please Select An Option :");
+                Console.WriteLine("\n 1. Search For Book");
+                Console.WriteLine("\n 2. Display Available Books");
+                Console.WriteLine("\n 3. Borrow A Book");
+                Console.WriteLine("\n 4. Return A Book");
+                Console.WriteLine("\n 5. Save and Exit");
+
+                int choice = int.Parse(Console.ReadLine());
+
+                switch (choice)
+                {
+                    case 1:
+                         SearchForBook();
+                        break;
+
+                    case 2:
+                        ViewAllBooks();
+                        break;
+
+                  /*  case 3:
+                        //BorrowBook
+                        break;
+
+                    case 4:
+                        // ReturnBook();
+                        ExitFlag = true;
+                        break;
+                    case 5:
+                        
+                        break;*/
+
+                    default:
+                        Console.WriteLine("Sorry your choice was wrong");
+                        break;
+
+                }
+                
+            }while (ExitFlag != true);
+        }
         static void AddnNewBook() 
         { 
                  Console.WriteLine("Enter Book Name");
@@ -68,7 +141,10 @@ namespace BasicLibrary
                  Console.WriteLine("Enter Book ID");
                  int ID = int.Parse(Console.ReadLine());
 
-                  Books.Add(  ( name, author, ID )  );
+                Console.WriteLine("Enter Book Quantity");
+                int Qnt = int.Parse(Console.ReadLine());
+
+                Books.Add(( name, author, ID, Qnt ));
                   Console.WriteLine("Book Added Succefully");
 
         }
@@ -126,9 +202,9 @@ namespace BasicLibrary
                         while ((line = reader.ReadLine()) != null)
                         {
                             var parts = line.Split('|');
-                            if (parts.Length == 3)
+                            if (parts.Length == 4)
                             {
-                                Books.Add((parts[0], parts[1], int.Parse(parts[2])));
+                                Books.Add((parts[0], parts[1], int.Parse(parts[2]), int.Parse(parts[3])));
                             }
                         }
                     }
@@ -149,7 +225,7 @@ namespace BasicLibrary
                 {
                     foreach (var book in Books)
                     {
-                        writer.WriteLine($"{book.BName}|{book.BAuthor}|{book.ID}");
+                        writer.WriteLine($"{book.BName}|{book.BAuthor}|{book.ID}|{book.Qnt}");
                     }
                 }
                 Console.WriteLine("Books saved to file successfully.");
@@ -159,6 +235,9 @@ namespace BasicLibrary
                 Console.WriteLine($"Error saving to file: {ex.Message}");
             }
         }
+       // static void BorrowBook() { }
+        
 
     }
 }
+        
