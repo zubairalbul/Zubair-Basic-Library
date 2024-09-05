@@ -17,7 +17,7 @@ namespace BasicLibrary
 
         static void Main(string[] args)
         {
-            AddAdmin();
+           
            LoadBooksFromFile();
            bool EnterFlag=false;
             SaveBooksToFile();
@@ -66,7 +66,7 @@ namespace BasicLibrary
             string email = Console.ReadLine();
             Console.WriteLine("Enter Your Password");
             string password = Console.ReadLine();
-
+            ReadAdmins();
             for (int i = 0; i < AdminFile.Length; i++)
             {
                 if (email == AdminReg[i].Email && password == AdminReg[i].Password)
@@ -419,6 +419,34 @@ namespace BasicLibrary
             AdminReg.Add((emailAdmin, AdminPass));
             AdminRegestration();
             Console.WriteLine("Book Added Succefully");
+        }
+        static void ReadAdmins()
+        {
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    using (StreamReader reader1 = new StreamReader(AdminFile))
+                    {
+                        string line;
+                        while ((line = reader1.ReadLine()) != null)
+                        {
+                            var parts = line.Split('|');
+                            if (parts.Length == 2)
+                            {
+                                AdminReg.Add((parts[0], parts[1]));
+                            }
+
+                        }
+                    }
+
+                    Console.WriteLine("Books loaded from file successfully.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading from file: {ex.Message}");
+            }
         }
         static void AddUser ()
         {
