@@ -10,10 +10,13 @@ namespace BasicLibrary
         static List<(string BName, string BAuthor, int ID, int Qnt)> Books = new List<(string BName, string BAuthor, int ID, int Qnt)>();
         static List<(string Email, string Password)>UserReg = new List<(string Email, string Password)>();
         static List<(string Email, string Password)> AdminReg = new List<(string Email, string Password)>();
-       // static List<(string Bname2, int BId, int BQNT)> Borrowed =new List<(string Bname2, int BId, int BQNT)> ();
+        static List<(string Email, string Password)> MasterReg = new List<(string Email, string Password)>();
+
+        // static List<(string Bname2, int BId, int BQNT)> Borrowed =new List<(string Bname2, int BId, int BQNT)> ();
         static string filePath = "C:\\Users\\Codeline User\\Desktop\\Zubair\\Lib.txt";
         static string UserFile = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibUser.txt";
         static string AdminFile = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibAdmin.txt";
+        static string MasterFile = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibMaster.txt";
 
         static void Main(string[] args)
         {
@@ -73,7 +76,10 @@ namespace BasicLibrary
                     AdminMenu();
 
                 else if (email == UserReg[i].Email && password == UserReg[i].Password) { UserMenu(); }
-                UserMenu();
+                else if (email == MasterReg[i].Email && password == MasterReg[i].Password) { MasterMenu(); }
+                else Console.WriteLine("Please Register as User");
+                AddUser();
+
             }
         }
         static void Master()
@@ -153,7 +159,6 @@ namespace BasicLibrary
                 
                 
             }
-        
         static void UserMenu()
         {
             Console.Clear();
@@ -389,7 +394,7 @@ namespace BasicLibrary
                 }
             }
         }
-       static void AdminRegestration()
+        static void AdminRegestration()
         {
             try
             {
@@ -418,7 +423,7 @@ namespace BasicLibrary
 
             AdminReg.Add((emailAdmin, AdminPass));
             AdminRegestration();
-            Console.WriteLine("Book Added Succefully");
+            Console.WriteLine("Admin Added Succefully");
         }
         static void ReadAdmins()
         {
@@ -450,16 +455,16 @@ namespace BasicLibrary
         }
         static void AddUser ()
         {
-            Console.WriteLine("Enter Admin Email");
+            Console.WriteLine("Enter User Email");
             string emailUser = Console.ReadLine();
 
-            Console.WriteLine("Enter Admin Password");
+            Console.WriteLine("Enter User Password");
             string UserPass = Console.ReadLine();
 
 
             UserReg.Add((emailUser, UserPass));
 
-            Console.WriteLine("Book Added Succefully");
+            Console.WriteLine("User Added Succefully");
         }
         static void UserRegestration()
         {
@@ -477,6 +482,34 @@ namespace BasicLibrary
             catch (Exception ex)
             {
                 Console.WriteLine($"Error saving to file: {ex.Message}");
+            }
+        }
+        static void UserReader()
+        {
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    using (StreamReader reader2 = new StreamReader(UserFile))
+                    {
+                        string line;
+                        while ((line = reader2.ReadLine()) != null)
+                        {
+                            var parts = line.Split('|');
+                            if (parts.Length == 2)
+                            {
+                                UserReg.Add((parts[0], parts[1]));
+                            }
+
+                        }
+                    }
+
+                    Console.WriteLine("User loaded from file successfully.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading from file: {ex.Message}");
             }
         }
         
