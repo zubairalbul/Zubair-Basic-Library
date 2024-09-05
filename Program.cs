@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Design;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -7,9 +8,13 @@ namespace BasicLibrary
     internal class Program
     {
         static List<(string BName, string BAuthor, int ID, int Qnt)> Books = new List<(string BName, string BAuthor, int ID, int Qnt)>();
+        static List<(string Email, string Password)>UserReg = new List<(string Email, string Password)>();
+        static List<(string Email, string Password)> AdminReg = new List<(string Email, string Password)>();
+        static List<(string Bname2, int BId, int BQNT)> Borrowed =new List<(string Bname2, int BId, int BQNT)> ();
         static string filePath = "C:\\Users\\Codeline User\\Desktop\\Zubair\\Lib.txt";
+        static string UserFile = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibUser.txt";
+        static string AdminFile = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibAdmin.txt";
 
-        
         static void Main(string[] args)
         {
            LoadBooksFromFile();
@@ -42,55 +47,69 @@ namespace BasicLibrary
         }
         static void AdminMenu()
         {
-            bool ExitFlag = false;
-            do
+            
+            Console.Clear();
+            Console.WriteLine("Enter Your Email");
+            string email = Console.ReadLine();
+            Console.WriteLine("Enter Your Password");
+            string password = Console.ReadLine();
+            for (int i = 0; i < AdminFile.Length; i++)
             {
-                Console.WriteLine("Welcome to Library");
-                Console.WriteLine("\n Select the Option :");
-                Console.WriteLine("\n 1- Add New Book");
-                Console.WriteLine("\n 2- Display All Books");
-                Console.WriteLine("\n 3- Search for Book by Name");
-                Console.WriteLine("\n 4- Save and Exit");
-
-                int choice = int.Parse(Console.ReadLine());
-
-                switch (choice)
+                if (email == AdminReg[i].Email && password == AdminReg[i].Password)
                 {
-                    case 1:
-                        AddnNewBook();
-                        SaveBooksToFile(); 
-                        break;
+                    bool ExitFlag = false;
+                    do
+                    {
+                        Console.WriteLine("Welcome to Library");
+                        Console.WriteLine("\n Select the Option :");
+                        Console.WriteLine("\n 1- Add New Book");
+                        Console.WriteLine("\n 2- Display All Books");
+                        Console.WriteLine("\n 3- Search for Book by Name");
+                        Console.WriteLine("\n 4- Save and Exit");
 
-                    case 2:
-                        ViewAllBooks();
-                        break;
+                        int choice = int.Parse(Console.ReadLine());
 
-                    case 3:
-                        SearchForBook();
-                        break;
+                        switch (choice)
+                        {
+                            case 1:
+                                AddnNewBook();
+                                SaveBooksToFile();
+                                break;
 
-                    case 4:
-                        SaveBooksToFile();
-                        ExitFlag = true;
-                        break;
+                            case 2:
+                                ViewAllBooks();
+                                break;
 
-                    default:
-                        Console.WriteLine("Sorry your choice was wrong");
-                        break;
+                            case 3:
+                                SearchForBook();
+                                break;
 
-                   
+                            case 4:
+                                SaveBooksToFile();
+                                ExitFlag = true;
+                                break;
 
+                            default:
+                                Console.WriteLine("Sorry your choice was wrong");
+                                break;
+
+
+
+                        }
+
+                        Console.WriteLine("press any key to continue");
+                        string cont = Console.ReadLine();
+
+                        Console.Clear();
+
+                    } while (ExitFlag != true);
                 }
-
-                Console.WriteLine("press any key to continue");
-                string cont = Console.ReadLine();
-
-                Console.Clear();
-
-            } while (ExitFlag != true);
+                else if (email == UserReg[i].Email && password == UserReg[i].Password) { UserMenu(); }
+            }
         }
         static void UserMenu()
         {
+            Console.Clear();
             Console.WriteLine("Welcome to Library");
             bool ExitFlag = false;
             do
@@ -108,25 +127,7 @@ namespace BasicLibrary
                 switch (choice)
                 {
                     case 1:
-                        Console.Clear();
-                        SearchForBook();
-                        Console.WriteLine("Do You want to Borrow it? \n 1. Yes \n 2. No");
-                        int UserChoice=int.Parse(Console.ReadLine());
-                        if (UserChoice == 1)
-                        {
-                            for (int i = 0; i < Books.Count; i++)
-                            {
-                                {
-                                    Books[i] = (Books[i].BName, Books[i].BAuthor, Books[i].ID, Books[i].Qnt - 1);
-
-                                    SaveBooksToFile();
-                                }
-                            }
-                        }
-                        else
-                            Console.WriteLine("Thank you For Your Time");
-
-                        
+                        SearchWithBorrow();
                         break;
 
                     case 2:
@@ -198,6 +199,27 @@ namespace BasicLibrary
 
             }
         }
+        static void SearchWithBorrow() 
+        {
+            Console.Clear();
+            SearchForBook();
+            Console.WriteLine("Do You want to Borrow it? \n 1. Yes \n 2. No");
+            int UserChoice = int.Parse(Console.ReadLine());
+            if (UserChoice == 1)
+            {
+                for (int i = 0; i < Books.Count; i++)
+                {
+                    {
+                        Books[i] = (Books[i].BName, Books[i].BAuthor, Books[i].ID, Books[i].Qnt - 1);
+
+                        SaveBooksToFile();
+                    }
+                }
+            }
+            else
+                Console.WriteLine("Thank you For Your Time");
+        }
+
 
         static void SearchForBook()
         {
@@ -323,6 +345,24 @@ namespace BasicLibrary
                     Console.WriteLine("The Book Is Not Available Right Now");
                     break;
                 }
+            }
+        }
+        static void AdminRegestration()
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(filePath))
+                {
+                    foreach (var admin in AdminReg)
+                    {
+                        writer.WriteLine($"{admin.Email}|{admin.Password}");
+                    }
+                }
+                Console.WriteLine("Admin user saved to file successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving to file: {ex.Message}");
             }
         }
         
