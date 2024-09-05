@@ -10,32 +10,30 @@ namespace BasicLibrary
         static List<(string BName, string BAuthor, int ID, int Qnt)> Books = new List<(string BName, string BAuthor, int ID, int Qnt)>();
         static List<(string Email, string Password)>UserReg = new List<(string Email, string Password)>();
         static List<(string Email, string Password)> AdminReg = new List<(string Email, string Password)>();
-        static List<(string Bname2, int BId, int BQNT)> Borrowed =new List<(string Bname2, int BId, int BQNT)> ();
+       // static List<(string Bname2, int BId, int BQNT)> Borrowed =new List<(string Bname2, int BId, int BQNT)> ();
         static string filePath = "C:\\Users\\Codeline User\\Desktop\\Zubair\\Lib.txt";
         static string UserFile = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibUser.txt";
         static string AdminFile = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibAdmin.txt";
 
         static void Main(string[] args)
         {
+            AddAdmin();
            LoadBooksFromFile();
            bool EnterFlag=false;
             SaveBooksToFile();
             do
             {
                 Console.WriteLine("Please Select an option: ");
-                Console.WriteLine("1. Owner. \n 2. User. \n 3. Exit ");
+                Console.WriteLine("1. Log In. \n 2. Exit ");
                 int Choice=int.Parse(Console.ReadLine());
                 switch (Choice)
                 {
                     case 1:
-                        AdminMenu();
+                        
+                        LogIn();
+                        AdminRegestration();
                         break;
-                    case 2:
-                        UserMenu();
-                        break;
-                    case 3:
-                        SaveBooksToFile();
-                        break;
+                   
                     default:
                         Console.WriteLine("Please Select an valid Option");
                         break;
@@ -45,18 +43,64 @@ namespace BasicLibrary
             } while (EnterFlag != true);  
             Console.Clear();
         }
-        static void AdminMenu()
+        static void MasterMenu()
         {
+            Console.WriteLine("Please Select Opration Want To Perform");
+            Console.WriteLine("1- Add New Admin. \n 2- Add New User. \n 3- Show Statistics Of Library. \n 4- Show Users List. \n 5- Show Admins List");
+            int MChoice=0;
+            switch (MChoice)
+            { 
             
+                case 1:
+                    AddAdmin();
+                    AdminRegestration();
+                    break;
+            }
+
+
+        }// edit
+        static void LogIn()
+        {
             Console.Clear();
             Console.WriteLine("Enter Your Email");
             string email = Console.ReadLine();
             Console.WriteLine("Enter Your Password");
             string password = Console.ReadLine();
+
             for (int i = 0; i < AdminFile.Length; i++)
             {
                 if (email == AdminReg[i].Email && password == AdminReg[i].Password)
+                    AdminMenu();
+
+                else if (email == UserReg[i].Email && password == UserReg[i].Password) { UserMenu(); }
+                UserMenu();
+            }
+        }
+        static void Master()
                 {
+                    StringBuilder sb1 = new StringBuilder();
+
+                    int AdminNumber = 0;
+
+                    for (int i = 0; i < Books.Count; i++)
+                    {
+                        AdminNumber = i + 1;
+                        sb1.Append("Admin ").Append(AdminNumber).Append(" Email  : ").Append(AdminReg[i].Email);
+                        sb1.AppendLine();
+                        sb1.Append("Admin ").Append(AdminNumber).Append(" Pass : ").Append(AdminReg[i].Password);
+                        sb1.AppendLine();
+                        sb1.AppendLine();
+                        sb1.AppendLine();
+                        Console.WriteLine(sb1.ToString());
+                        sb1.Clear();
+
+                    }
+
+                }
+        static void AdminMenu()
+        {
+            
+           
                     bool ExitFlag = false;
                     do
                     {
@@ -72,9 +116,9 @@ namespace BasicLibrary
                         switch (choice)
                         {
                             case 1:
-                                AddnNewBook();
-                                SaveBooksToFile();
-                                break;
+                            AddAdmin();
+
+                            break;
 
                             case 2:
                                 ViewAllBooks();
@@ -88,8 +132,11 @@ namespace BasicLibrary
                                 SaveBooksToFile();
                                 ExitFlag = true;
                                 break;
-
-                            default:
+                            case 5:
+                            AddnNewBook();
+                            SaveBooksToFile();
+                            break;
+                        default:
                                 Console.WriteLine("Sorry your choice was wrong");
                                 break;
 
@@ -103,10 +150,10 @@ namespace BasicLibrary
                         Console.Clear();
 
                     } while (ExitFlag != true);
-                }
-                else if (email == UserReg[i].Email && password == UserReg[i].Password) { UserMenu(); }
+                
+                
             }
-        }
+        
         static void UserMenu()
         {
             Console.Clear();
@@ -175,7 +222,6 @@ namespace BasicLibrary
 
 
         }
-
         static void ViewAllBooks()
         {
             StringBuilder sb = new StringBuilder();
@@ -219,8 +265,6 @@ namespace BasicLibrary
             else
                 Console.WriteLine("Thank you For Your Time");
         }
-
-
         static void SearchForBook()
         {
             Console.WriteLine("Enter the book name you want");
@@ -240,7 +284,6 @@ namespace BasicLibrary
             if (flag != true)
             { Console.WriteLine("book not found"); }
         }
-
         static void LoadBooksFromFile()
         {
             try
@@ -270,7 +313,6 @@ namespace BasicLibrary
             }
 
         }
-
         static void SaveBooksToFile()
         {
             try
@@ -347,18 +389,62 @@ namespace BasicLibrary
                 }
             }
         }
-        static void AdminRegestration()
+       static void AdminRegestration()
         {
             try
             {
-                using (StreamWriter writer = new StreamWriter(filePath))
+                using (StreamWriter writer1 = new StreamWriter(AdminFile, true))
                 {
                     foreach (var admin in AdminReg)
                     {
-                        writer.WriteLine($"{admin.Email}|{admin.Password}");
+                        writer1.Write($"{admin.Email}|{admin.Password}");
                     }
                 }
                 Console.WriteLine("Admin user saved to file successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving to file: {ex.Message}");
+            }
+        }
+        static void AddAdmin()
+        {
+            Console.WriteLine("Enter Admin Email");
+            string emailAdmin = Console.ReadLine();
+
+            Console.WriteLine("Enter Admin Password");
+            string AdminPass = Console.ReadLine();
+
+
+            AdminReg.Add((emailAdmin, AdminPass));
+            AdminRegestration();
+            Console.WriteLine("Book Added Succefully");
+        }
+        static void AddUser ()
+        {
+            Console.WriteLine("Enter Admin Email");
+            string emailUser = Console.ReadLine();
+
+            Console.WriteLine("Enter Admin Password");
+            string UserPass = Console.ReadLine();
+
+
+            UserReg.Add((emailUser, UserPass));
+
+            Console.WriteLine("Book Added Succefully");
+        }
+        static void UserRegestration()
+        {
+            try
+            {
+                using (StreamWriter writer2 = new StreamWriter(UserFile))
+                {
+                    foreach (var user in UserReg)
+                    {
+                        writer2.WriteLine($"{user.Email}|{user.Password}");
+                    }
+                }
+                Console.WriteLine("User saved to file successfully.");
             }
             catch (Exception ex)
             {
