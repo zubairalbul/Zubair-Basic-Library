@@ -22,8 +22,9 @@ namespace BasicLibrary
         {
            
            LoadBooksFromFile();
-           bool EnterFlag=false;
+            MasterReader();
             SaveBooksToFile();
+            bool EnterFlag = false;
             do
             {
                 Console.WriteLine("Please Select an option: ");
@@ -48,6 +49,7 @@ namespace BasicLibrary
         }
         static void MasterMenu()
         {
+            
             Console.WriteLine("Please Select Opration Want To Perform");
             Console.WriteLine("1- Add New Admin. \n 2- Add New User. \n 3- Show Statistics Of Library. \n 4- Show Users List. \n 5- Show Admins List");
             int MChoice=0;
@@ -58,8 +60,23 @@ namespace BasicLibrary
                     AddAdmin();
                     AdminRegestration();
                     break;
-            }
-
+                case 2:
+                    AddUser();
+                    UserRegestration();
+                    break;
+                case 3:
+                    LoadBooksFromFile();
+                    break;
+                case 4:
+                    Console.WriteLine(UserFile);
+                    break;
+                case 5: 
+                    Console.WriteLine(AdminFile);
+                    break;
+                default: Console.WriteLine("Invalid Selection");
+                    break;
+            
+            } 
 
         }// edit
         static void LogIn()
@@ -445,7 +462,7 @@ namespace BasicLibrary
                         }
                     }
 
-                    Console.WriteLine("Books loaded from file successfully.");
+                    Console.WriteLine("Admin loaded from file successfully.");
                 }
             }
             catch (Exception ex)
@@ -505,6 +522,52 @@ namespace BasicLibrary
                     }
 
                     Console.WriteLine("User loaded from file successfully.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading from file: {ex.Message}");
+            }
+        }
+        static void MasterWriter()
+        {
+            try
+            {
+                using (StreamWriter writer2 = new StreamWriter(MasterFile))
+                {
+                    foreach (var Master in MasterReg)
+                    {
+                        writer2.WriteLine($"{Master.Email}|{Master.Password}");
+                    }
+                }
+                Console.WriteLine("Master saved to file successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving to file: {ex.Message}");
+            }
+        }
+        static void MasterReader()
+        {
+            try
+            {
+                if (File.Exists(MasterFile))
+                {
+                    using (StreamReader reader3 = new StreamReader(MasterFile))
+                    {
+                        string line;
+                        while ((line = reader3.ReadLine()) != null)
+                        {
+                            var parts = line.Split('|');
+                            if (parts.Length == 2)
+                            {
+                                UserReg.Add((parts[0], parts[1]));
+                            }
+
+                        }
+                    }
+
+                    Console.WriteLine("Master loaded from file successfully.");
                 }
             }
             catch (Exception ex)
