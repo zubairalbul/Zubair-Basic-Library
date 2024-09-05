@@ -24,6 +24,7 @@ namespace BasicLibrary
            LoadBooksFromFile();
             MasterReader();
             SaveBooksToFile();
+            Console.Clear();
             bool EnterFlag = false;
             do
             {
@@ -86,18 +87,34 @@ namespace BasicLibrary
             string email = Console.ReadLine();
             Console.WriteLine("Enter Your Password");
             string password = Console.ReadLine();
-            ReadAdmins();
-            for (int i = 0; i < AdminFile.Length; i++)
+            bool flagu = false;
+            
+            for (int i = 0; i < AdminReg.Count; i++)
             {
                 if (email == AdminReg[i].Email && password == AdminReg[i].Password)
+                {
                     AdminMenu();
-
-                else if (email == UserReg[i].Email && password == UserReg[i].Password) { UserMenu(); }
-                else if (email == MasterReg[i].Email && password == MasterReg[i].Password) { MasterMenu(); }
-                else Console.WriteLine("Please Register as User");
-                AddUser();
-
+                    flagu = true;
+                }
             }
+            for (int i = 0; i < UserReg.Count; i++) {
+                if (email == UserReg[i].Email && password == UserReg[i].Password)
+                {
+                    UserMenu();
+                    flagu = true;
+                }
+            
+            }
+
+            for (int i = 0; i < MasterReg.Count; i++)
+            {
+                if (email == MasterReg[i].Email && password == MasterReg[i].Password)
+                {
+                    MasterMenu();
+                    flagu = true;
+                }
+            }
+            if (!flagu) Console.WriteLine("Invalid Selection");
         }
         static void Master()
                 {
