@@ -87,10 +87,13 @@ namespace BasicLibrary
 
                         break;
                     case 4:
-                        Console.WriteLine(UserFile);
+                        UsersBorrowLists();
+                        UsersInfoAppend();
                         break;
+
                     case 5:
-                        Console.WriteLine(AdminFile);
+                        ReadAdmins();
+                        AppendAdmins();
                         break;
                     case 6:
                         ExFlag = true;
@@ -629,6 +632,22 @@ namespace BasicLibrary
                 Console.WriteLine($"Error loading from file: {ex.Message}");
             }
         }
+        static void AppendAdmins()
+        {
+            StringBuilder sb5 = new StringBuilder();
+
+            int UserNumber = 0;
+            for (int i = 0; i < UserReg.Count; i++)
+            {
+                UserNumber = i + 1;
+                sb5.Append("Admin ").Append(UserNumber).Append(" name : ").Append(AdminReg[i].Email);
+                sb5.AppendLine();
+                sb5.AppendLine();
+                Console.WriteLine(sb5.ToString());
+                sb5.Clear();
+
+            }
+        }
         static void AddUser()
         {
             Console.WriteLine("Enter User Email");
@@ -743,6 +762,58 @@ namespace BasicLibrary
 
 
 
+        }
+        static void UsersBorrowLists ()
+        {
+            try
+            {
+                if (File.Exists(BorrowedBook))
+                {
+                    using (StreamReader reader4 = new StreamReader(BorrowedBook))
+                    {
+                        string line;
+                        while ((line = reader4.ReadLine()) != null)
+                        {
+                            var parts = line.Split('|');
+                            if (parts.Length == 3)
+                            {
+                                Users.Add((parts[0], parts[1], int.Parse(parts[2])));
+                            }
+
+                        }
+                    }
+
+                    Console.WriteLine("User loaded from file successfully.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading from file: {ex.Message}");
+            }
+        }
+
+        static void UsersInfoAppend()
+        {
+            StringBuilder sb4 = new StringBuilder();
+
+            int BookNumber = 0;
+
+            for (int i = 0; i < Users.Count; i++)
+            {
+                BookNumber = i + 1;
+                sb4.Append("Book ").Append(BookNumber).Append(" name : ").Append(Users[i].User);
+                sb4.AppendLine();
+                sb4.Append("Book ").Append(BookNumber).Append(" Author : ").Append(Users[i].Bookk);
+                sb4.AppendLine();
+                sb4.Append("Book ").Append(BookNumber).Append(" ID : ").Append(Users[i].Qnt);
+                sb4.AppendLine();
+                sb4.Append("Book ").Append(BookNumber).Append(" Quantity : ").Append(Users[i].Qnt);
+                sb4.AppendLine();
+                sb4.AppendLine();
+                Console.WriteLine(sb4.ToString());
+                sb4.Clear();
+
+            }
         }
     }
 }
