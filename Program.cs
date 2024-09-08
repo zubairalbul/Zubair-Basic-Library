@@ -278,7 +278,7 @@ namespace BasicLibrary
                     case 3:
                         Console.Clear();
                         LoadBooksFromFile();
-                        BorrowBook();
+                        SearchWithBorrow();
 
                         break;
                     case 4:
@@ -358,17 +358,22 @@ namespace BasicLibrary
         }
         static void SearchWithBorrow()
         {
+            int BS;
             Console.Clear();
             SearchForBook();
             Console.WriteLine("Do You want to Borrow it? \n 1. Yes \n 2. No");
             int UserChoice = int.Parse(Console.ReadLine());
+            Console.WriteLine("Enter the quantity: ");
+            BS = int.Parse(Console.ReadLine());
             if (UserChoice == 1)
             {
                 for (int i = 0; i < Books.Count; i++)
                 {
                     {
-                        Books[i] = (Books[i].BName, Books[i].BAuthor, Books[i].ID, Books[i].Qnt - 1);
+                        Books[i] = (Books[i].BName, Books[i].BAuthor, Books[i].ID, (Books[i].Qnt - BS));
                         SaveBooksToFile();
+                        BookName.Add((currentUser, Books[i].BName, BS));
+                        Borrowedbooks();
 
                     }
                 }
@@ -469,16 +474,22 @@ namespace BasicLibrary
                         Borrowedbooks();
                         Console.WriteLine("Borrowing Was Succesfully Done.");
                     }
-                    
-                        
-                }
-                else if (BookNames != Books[i].BName)
-                {
-                    Console.WriteLine("The Book Is Not Available Right Now");
-                    
-                }
+                    else if (CS == 2)
+                    {
+                        Console.WriteLine("Thank You For Your Time");
+                        break;
 
 
+
+                    }
+                    else if (BookNames != Books[i].BName)
+                    {
+                        Console.WriteLine("The Book Is Not Available Right Now");
+                        flag = !true;
+                    }
+
+
+                }
             }
         }
         static void Borrowedbooks()
