@@ -277,7 +277,7 @@ namespace BasicLibrary
 
                     case 3:
                         Console.Clear();
-                        LoadBooksFromFile();
+                        //LoadBooksFromFile();
                         SearchWithBorrow();
 
                         break;
@@ -360,7 +360,8 @@ namespace BasicLibrary
         {
             int BS;
             Console.Clear();
-            SearchForBook();
+            
+            string h=SearchForBook();
             Console.WriteLine("Do You want to Borrow it? \n 1. Yes \n 2. No");
             int UserChoice = int.Parse(Console.ReadLine());
             Console.WriteLine("Enter the quantity: ");
@@ -369,6 +370,7 @@ namespace BasicLibrary
             {
                 for (int i = 0; i < Books.Count; i++)
                 {
+                    if (h == Books[i].BName)
                     {
                         Books[i] = (Books[i].BName, Books[i].BAuthor, Books[i].ID, (Books[i].Qnt - BS));
                         SaveBooksToFile();
@@ -381,7 +383,7 @@ namespace BasicLibrary
             else
                 Console.WriteLine("Thank you For Your Time");
         }
-        static void SearchForBook()
+        static string SearchForBook()
         {
             LoadBooksFromFile();
             ViewAllBooks();
@@ -395,12 +397,13 @@ namespace BasicLibrary
                 {
                     Console.WriteLine("Book Author is : " + Books[i].BAuthor + "Book ID: " + Books[i].ID);
                     flag = true;
+                    return name;
                     break;
                 }
             }
 
             if (flag != true)
-            { Console.WriteLine("book not found"); }
+            { Console.WriteLine("book not found"); } return null;
         }
         static void LoadBooksFromFile()
         {
@@ -496,7 +499,7 @@ namespace BasicLibrary
         {
             try
             {
-                using (StreamWriter writer4 = new StreamWriter(BorrowedBook))
+                using (StreamWriter writer4 = new StreamWriter(BorrowedBook, true))
                 {
                     foreach (var Bbook in BookName)
                     {
