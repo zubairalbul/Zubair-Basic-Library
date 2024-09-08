@@ -11,12 +11,13 @@ namespace BasicLibrary
         static List<(string Email, string Password)>UserReg = new List<(string Email, string Password)>();
         static List<(string Email, string Password)> AdminReg = new List<(string Email, string Password)>();
         static List<(string Email, string Password)> MasterReg = new List<(string Email, string Password)>();
-
+        static List<(string BookN, int Quantity)> BookName = new List<(string BookN, int Quantity)>();
         // static List<(string Bname2, int BId, int BQNT)> Borrowed =new List<(string Bname2, int BId, int BQNT)> ();
         static string filePath = "C:\\Users\\Codeline User\\Desktop\\Zubair\\Lib.txt";
         static string UserFile = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibUser.txt";
         static string AdminFile = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibAdmin.txt";
         static string MasterFile = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibMaster.txt";
+        static string BorrowedBook = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibBorrowed.txt";
 
         static void Main(string[] args)
         {
@@ -73,6 +74,12 @@ namespace BasicLibrary
                     break;
                 case 3:
                     LoadBooksFromFile();
+                    Console.Clear();
+                    Console.WriteLine("Aveliable Books: \n ");
+                    ViewAllBooks();
+                    Console.WriteLine("Borrowed Books: \n ");
+                    ReadBooks();
+
                     break;
                 case 4:
                     Console.WriteLine(UserFile);
@@ -124,11 +131,11 @@ namespace BasicLibrary
             }
 
 
-                if (!flagu && !flagA && !flagM) {Console.WriteLine("Invalid User Do You want to Registor as User?");
+                if (!flagu && !flagA && !flagM) {Console.WriteLine("Invalid User Do You want to Registor as User? \n 1. Yes. \n 2. No. ");
             
                 int Reg = int.Parse(Console.ReadLine());
                 if (Reg == 1) { AddUser(); }
-                else if (Reg == 2) { Console.WriteLine("Thankyou for your time"); }
+                else if (Reg == 2) { Console.WriteLine("Thank you for your time"); }
             }
                 else if (flagM = true) { MasterMenu(); }
                 else if(flagA=true) { AdminMenu(); }
@@ -416,6 +423,54 @@ namespace BasicLibrary
                     Console.WriteLine("The Book Is Not Available Right Now");
                     break;
                 }
+                Borrowedbooks();
+
+            }
+        }
+        static void Borrowedbooks()
+        {
+            try
+            {
+                using (StreamWriter writer4 = new StreamWriter(BorrowedBook))
+                {
+                    foreach (var Bbook in BookName)
+                    {
+                        writer4.WriteLine($"{Bbook.BookN}||{Bbook.Quantity}");
+                    }
+                }
+                Console.WriteLine("Books saved to file successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving to file: {ex.Message}");
+            }
+        }
+        static void ReadBooks()
+        {
+            try
+            {
+                if (File.Exists(BorrowedBook))
+                {
+                    using (StreamReader reader = new StreamReader(BorrowedBook))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            var parts = line.Split('|');
+                            if (parts.Length == 2)
+                            {
+                                BookName.Add((parts[0], int.Parse(parts[1])));
+                            }
+
+                        }
+                    }
+
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading from file: {ex.Message}");
             }
         }
         static void ReturnBook() 
