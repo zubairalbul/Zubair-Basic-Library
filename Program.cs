@@ -20,26 +20,32 @@ namespace BasicLibrary
 
         static void Main(string[] args)
         {
-           
+            
            LoadBooksFromFile();
-            MasterReader();
             SaveBooksToFile();
             Console.Clear();
             bool EnterFlag = false;
             do
             {
                 Console.WriteLine("Please Select an option: ");
-                Console.WriteLine("1. Log In. \n 2. Exit ");
+                Console.WriteLine(" 1. Log In. \n 2. Registor as User. \n 3. Exit. ");
                 int Choice=int.Parse(Console.ReadLine());
                 switch (Choice)
                 {
                     case 1:
-                        
+                        MasterReader();
+                        ReadAdmins();
+                        UserReader();
                         LogIn();
                         AdminRegestration();
+                        
+                        break;
+                    case 2:
+                        AddUser();
+                        UserRegestration();
                         break;
                    
-                    default:
+                    case 3:
                         Console.WriteLine("Please Select an valid Option");
                         break;
 
@@ -53,7 +59,7 @@ namespace BasicLibrary
             
             Console.WriteLine("Please Select Opration Want To Perform");
             Console.WriteLine("1- Add New Admin. \n 2- Add New User. \n 3- Show Statistics Of Library. \n 4- Show Users List. \n 5- Show Admins List");
-            int MChoice=0;
+            int MChoice=int.Parse(Console.ReadLine());
             switch (MChoice)
             { 
             
@@ -82,39 +88,52 @@ namespace BasicLibrary
         }// edit
         static void LogIn()
         {
+            
             Console.Clear();
             Console.WriteLine("Enter Your Email");
             string email = Console.ReadLine();
             Console.WriteLine("Enter Your Password");
             string password = Console.ReadLine();
             bool flagu = false;
-            
-            for (int i = 0; i < AdminReg.Count; i++)
-            {
-                if (email == AdminReg[i].Email && password == AdminReg[i].Password)
-                {
-                    AdminMenu();
-                    flagu = true;
-                }
-            }
-            for (int i = 0; i < UserReg.Count; i++) {
-                if (email == UserReg[i].Email && password == UserReg[i].Password)
-                {
-                    UserMenu();
-                    flagu = true;
-                }
-            
-            }
+            bool flagM = false;
+            bool flagA = false;
 
             for (int i = 0; i < MasterReg.Count; i++)
             {
                 if (email == MasterReg[i].Email && password == MasterReg[i].Password)
                 {
-                    MasterMenu();
+                    
+                    flagM = true;
+                }
+            }
+            for (int i = 0; i < UserReg.Count; i++)
+            {
+                if (email == UserReg[i].Email && password == UserReg[i].Password)
+                {
+                    
                     flagu = true;
                 }
             }
-            if (!flagu) Console.WriteLine("Invalid Selection");
+            for (int i = 0; i < AdminReg.Count; i++)
+            {
+                if (email == AdminReg[i].Email && password == AdminReg[i].Password)
+                {
+                    
+                    flagA = true;
+                }
+            }
+
+
+                if (!flagu && !flagA && !flagM) {Console.WriteLine("Invalid User Do You want to Registor as User?");
+            
+                int Reg = int.Parse(Console.ReadLine());
+                if (Reg == 1) { AddUser(); }
+                else if (Reg == 2) { Console.WriteLine("Thankyou for your time"); }
+            }
+                else if (flagM = true) { MasterMenu(); }
+                else if(flagA=true) { AdminMenu(); }
+                else if(flagu=true) { AdminMenu(); }
+            
         }
         static void Master()
                 {
@@ -578,7 +597,7 @@ namespace BasicLibrary
                             var parts = line.Split('|');
                             if (parts.Length == 2)
                             {
-                                UserReg.Add((parts[0], parts[1]));
+                                MasterReg.Add((parts[0], parts[1]));
                             }
 
                         }
@@ -592,6 +611,9 @@ namespace BasicLibrary
                 Console.WriteLine($"Error loading from file: {ex.Message}");
             }
         }
+      
+       
+
         
 
     }
