@@ -577,11 +577,11 @@ namespace BasicLibrary
         {
             try
             {
-                using (StreamWriter writer1 = new StreamWriter(AdminFile, true))
+                using (StreamWriter writer1 = new StreamWriter(AdminFile))
                 {
                     foreach (var admin in AdminReg)
                     {
-                        writer1.Write($"{admin.Email}|{admin.Password}");
+                        writer1.WriteLine($"{admin.Email}|{admin.Password}");
                     }
                 }
 
