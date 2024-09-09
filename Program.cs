@@ -7,6 +7,7 @@ namespace BasicLibrary
 {
     internal class Program
     {
+        string CurrentUser;
         static string currentUser;
         static List<(string BName, string BAuthor, int ID, int Qnt)> Books = new List<(string BName, string BAuthor, int ID, int Qnt)>();
         static List<(string Email, string Password)> UserReg = new List<(string Email, string Password)>();
@@ -24,15 +25,18 @@ namespace BasicLibrary
 
         static void Main(string[] args)
         {
-
-
+            
             Console.Clear();
             bool EnterFlag = false;
             do
             {
-                Console.WriteLine("Please Select an option: ");
-                Console.WriteLine(" 1. Log In. \n 2. Registor as User. \n 3. Exit. ");
-                int Choice = int.Parse(Console.ReadLine());
+                try
+                {
+                    Console.Clear() ;
+                    Console.WriteLine("Please Select an option: ");
+                    Console.WriteLine(" 1. Log In. \n 2. Registor as User. \n 3. Exit. ");
+                    int Choice = int.Parse(Console.ReadLine());
+                
                 switch (Choice)
                 {
                     case 1:
@@ -46,14 +50,20 @@ namespace BasicLibrary
                     case 2:
                         AddUser();
                         UserRegestration();
+
                         break;
 
                     case 3:
-                        Console.WriteLine("Please Select an valid Option");
+                        EnterFlag = true;
                         break;
+                    default:
+                            Console.WriteLine("Invalid Input");
+                            break;
+
 
                 }
-
+                }
+                catch (Exception ex) { Console.WriteLine("Invalid Input" + ex); }
             } while (EnterFlag != true);
             Console.Clear();
         }
@@ -62,6 +72,7 @@ namespace BasicLibrary
             bool ExFlag = false;
             do
             {
+                Console.Clear() ;   
                 Console.WriteLine("Please Select Opration Want To Perform");
                 Console.WriteLine("1- Add New Admin. \n 2- Add New User. \n 3- Show Statistics Of Library. \n 4- Show Users List. \n 5- Show Admins List \n 6- Exit");
                 int MChoice = int.Parse(Console.ReadLine());
@@ -349,7 +360,7 @@ namespace BasicLibrary
             for (int i = 0; i < BookName.Count; i++)
             {
                 BowrroedNumber = i + 1;
-                sb2.Append("Book ").Append(BowrroedNumber).Append(" name : ").Append(BookName[i].BookN);
+                sb2.Append("Borrowed by: ").Append(UserReg[i].Email).Append("\nBook ").Append(BowrroedNumber).Append(" name : ").Append(BookName[i].BookN);
                 sb2.AppendLine();
                 sb2.Append("Book ").Append(BowrroedNumber).Append(" Quantity : ").Append(BookName[i].Quantity);
                 sb2.AppendLine();
@@ -640,7 +651,7 @@ namespace BasicLibrary
             for (int i = 0; i < UserReg.Count; i++)
             {
                 UserNumber = i + 1;
-                sb5.Append("Admin ").Append(UserNumber).Append(" name : ").Append(AdminReg[i].Email);
+                sb5.Append("Admin ").Append(UserNumber).Append(" Email : ").Append(AdminReg[i].Email);
                 sb5.AppendLine();
                 sb5.AppendLine();
                 Console.WriteLine(sb5.ToString());
@@ -801,11 +812,9 @@ namespace BasicLibrary
             for (int i = 0; i < Users.Count; i++)
             {
                 BookNumber = i + 1;
-                sb4.Append("Book ").Append(BookNumber).Append(" name : ").Append(Users[i].User);
+                sb4.Append("User ").Append(BookNumber).Append(" Email : ").Append(Users[i].User);
                 sb4.AppendLine();
-                sb4.Append("Book ").Append(BookNumber).Append(" Author : ").Append(Users[i].Bookk);
-                sb4.AppendLine();
-                sb4.Append("Book ").Append(BookNumber).Append(" ID : ").Append(Users[i].Qnt);
+                sb4.Append("Book ").Append(BookNumber).Append(" Name : ").Append(Users[i].Bookk);
                 sb4.AppendLine();
                 sb4.Append("Book ").Append(BookNumber).Append(" Quantity : ").Append(Users[i].Qnt);
                 sb4.AppendLine();
