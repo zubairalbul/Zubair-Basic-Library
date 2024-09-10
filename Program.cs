@@ -9,12 +9,12 @@ namespace BasicLibrary
     {
         static string currentUser;
         static List<(string BName, string BAuthor, int ID, int Qnt)> Books = new List<(string BName, string BAuthor, int ID, int Qnt)>();
-        static List<(string Email, string Password)> UserReg = new List<(string Email, string Password)>();
+        static List<(int Id, string Name, string Email, string Password)> UserReg = new List<(int Id, string Name, string Email, string Password)>();
         static List<(string Email, string Password)> AdminReg = new List<(string Email, string Password)>();
         static List<(string Email, string Password)> MasterReg = new List<(string Email, string Password)>();
         static List<(string User, string BookN, int Quantity)> BookName = new List<(string user, string BookN, int Quantity)>();
         static List<(string User, string Bookk, int Qnt)> Users = new List<(string User, string Bookk, int Qnt)>();
-        static List<(string Bname2, int BQNT)> Reccomanded = new List<(string Bname2, int BQNT)> ();
+        static List<(string Bname2, int BQNT)> Reccomanded = new List<(string Bname2, int BQNT)>();
         static string filePath = "C:\\Users\\Codeline User\\Desktop\\Zubair\\Lib.txt";
         static string UserFile = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibUser.txt";
         static string AdminFile = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibAdmin.txt";
@@ -35,12 +35,12 @@ namespace BasicLibrary
             do
             {
                 Console.WriteLine("Please Select an option: ");
-                Console.WriteLine(" 1. Log In. \n 2. Registor as User. \n 3. Exit. ");
+                Console.WriteLine(" 1. Log In. \n 2. Registor as User. \n 3. Riddle. \n 4. Exit. ");
                 int Choice = int.Parse(Console.ReadLine());
                 switch (Choice)
                 {
                     case 1:
-                        
+
                         LogIn();
                         AdminRegestration();
 
@@ -49,10 +49,12 @@ namespace BasicLibrary
                         AddUser();
                         UserRegestration();
                         break;
-
                     case 3:
-                        Console.WriteLine("Please Select an valid Option");
+                        Riddle();
                         break;
+                    case 4:
+                        return;
+                        
 
                 }
 
@@ -65,7 +67,7 @@ namespace BasicLibrary
             do
             {
                 Console.WriteLine("Please Select Opration Want To Perform");
-                Console.WriteLine("1- Add New Admin. \n 2- Add New User. \n 3- Show Statistics Of Library. \n 4- Show Users List. \n 5- Show Admins List \n 6- Exit");
+                Console.WriteLine(" 1- Add New Admin. \n 2- Add New User. \n 3- Show Statistics Of Library. \n 4- Show Users List. \n 5- Show Admins List \n 6- Exit");
                 int MChoice = int.Parse(Console.ReadLine());
                 switch (MChoice)
                 {
@@ -79,7 +81,7 @@ namespace BasicLibrary
                         UserRegestration();
                         break;
                     case 3:
-                        
+
                         Console.Clear();
                         Console.WriteLine("Aveliable Books: \n ");
                         ViewAllBooks();
@@ -88,12 +90,14 @@ namespace BasicLibrary
 
                         break;
                     case 4:
-                        UsersBorrowLists();
-                        UsersInfoAppend();
+                        
+                        UsersListsAppend();
+                        
+                        
                         break;
 
                     case 5:
-                    AppendAdmins();
+                        AppendAdmins();
                         break;
                     case 6:
                         ExFlag = true;
@@ -105,9 +109,10 @@ namespace BasicLibrary
                 }
                 Console.WriteLine("press any key to continue");
                 string conts = Console.ReadLine();
+                Console.Clear();
             } while (ExFlag != true);
 
-        }// edit
+        }// Master Menu Options
         static void LogIn()
         {
             Console.Clear();
@@ -173,7 +178,7 @@ namespace BasicLibrary
             else if (flagA == true) { AdminMenu(); }
             else if (flagu == true) { UserMenu(); }
 
-        }
+        } //check the Input to execute the proper menu
         static void Master()
         {
             StringBuilder sb1 = new StringBuilder();
@@ -194,7 +199,7 @@ namespace BasicLibrary
 
             }
 
-        }
+        }// make it as a resource for adminn appending 
         static void AdminMenu()
         {
 
@@ -241,14 +246,14 @@ namespace BasicLibrary
                 }
 
                 Console.WriteLine("press any key to continue");
-                string cont = Console.ReadLine();
+                var cont = Console.ReadKey();
 
                 Console.Clear();
 
             } while (ExitFlag != true);
 
 
-        }
+        }//Admin options menu
         static void UserMenu()
         {
             Console.Clear();
@@ -281,7 +286,7 @@ namespace BasicLibrary
 
                     case 3:
                         Console.Clear();
-                       
+
                         SearchWithBorrow();
 
                         break;
@@ -289,6 +294,9 @@ namespace BasicLibrary
                         Console.Clear();
                         ReturnBook();
                         break;
+                        case 5:
+                        return;
+                       
 
                     default:
                         Console.Clear();
@@ -298,7 +306,7 @@ namespace BasicLibrary
                 }
 
             } while (ExitFlag != true);
-        }
+        }//User options Menu
         static void AddnNewBook()
         {
 
@@ -319,7 +327,7 @@ namespace BasicLibrary
             Console.WriteLine("Book Added Succefully");
 
 
-        }
+        }// adding book menu
         static void ViewAllBooks()
         {
             StringBuilder sb = new StringBuilder();
@@ -342,7 +350,7 @@ namespace BasicLibrary
                 sb.Clear();
 
             }
-        }
+        }// appending the books 
         static void ViewAllBorrowedBooks()
         {
             StringBuilder sb2 = new StringBuilder();
@@ -362,18 +370,50 @@ namespace BasicLibrary
         }
         static void SearchWithBorrow()
         {
-            int BS;
+           // int BS;
             Console.Clear();
-            
-            string h=SearchForBook();
+
+            string h = SearchForBook();
             Console.WriteLine("Do You want to Borrow it? \n 1. Yes \n 2. No");
             int UserChoice = int.Parse(Console.ReadLine());
-           
+
             if (UserChoice == 1)
-            { 
+            {
+               // Console.WriteLine("Enter the quantity: ");
+                //BS = int.Parse(Console.ReadLine());
+
+                for (int i = 0; i < Books.Count; i++)
+                {
+                    if (h == Books[i].BName)
+                    {
+                        Books[i] = (Books[i].BName, Books[i].BAuthor, Books[i].ID, (Books[i].Qnt - 1));
+                        SaveBooksToFile();
+                        BookName.Add((currentUser, Books[i].BName, Books[i].Qnt));
+                        Borrowedbooks();
+
+                    }
+                }
+            }
+            else if (UserChoice == 2 || UserChoice != 1)
+            {
+                Console.Clear();
+                Console.WriteLine("Thank you For Your Time");
+            }
+        }
+        static void SearchWithBorrow2()
+        {
+            int BS;
+            //Console.Clear();
+
+            string h = SearchForBook2();
+            Console.WriteLine("Do You want to Borrow it? \n 1. Yes \n 2. No");
+            int UserChoice = int.Parse(Console.ReadLine());
+
+            if (UserChoice == 1)
+            {
                 Console.WriteLine("Enter the quantity: ");
-            BS = int.Parse(Console.ReadLine());
-            
+                BS = int.Parse(Console.ReadLine());
+
                 for (int i = 0; i < Books.Count; i++)
                 {
                     if (h == Books[i].BName)
@@ -386,7 +426,7 @@ namespace BasicLibrary
                     }
                 }
             }
-            else if (UserChoice == 2|| UserChoice!=1)
+            else if (UserChoice == 2 || UserChoice != 1)
             {
                 Console.Clear();
                 Console.WriteLine("Thank you For Your Time");
@@ -394,8 +434,32 @@ namespace BasicLibrary
         }
         static string SearchForBook()
         {
-            LoadBooksFromFile();
+
+            Console.WriteLine("Enter the book name you want");
+            string name = Console.ReadLine();
             ViewAllBooks();
+
+            bool flag = false;
+
+            for (int i = 0; i < Books.Count; i++)
+            {
+                if (Books[i].BName == name)
+                {
+                    Console.WriteLine("Book Author is : " + Books[i].BAuthor + "Book ID: " + Books[i].ID);
+                    flag = true;
+                    return name;
+                    break;
+                }
+            }
+
+            if (flag != true)
+            { Console.WriteLine("book not found"); }
+            return null;
+        }
+        static string SearchForBook2()
+        {
+            // LoadBooksFromFile();
+            // ViewAllBooks();
             Console.WriteLine("Enter the book name you want");
             string name = Console.ReadLine();
             bool flag = false;
@@ -412,7 +476,8 @@ namespace BasicLibrary
             }
 
             if (flag != true)
-            { Console.WriteLine("book not found"); } return null;
+            { Console.WriteLine("book not found"); }
+            return null;
         }
         static void LoadBooksFromFile()
         {
@@ -454,7 +519,7 @@ namespace BasicLibrary
                         writer.WriteLine($"{book.BName}|{book.BAuthor}|{book.ID}|{book.Qnt}");
                     }
                 }
-               // Console.WriteLine("Books saved to file successfully.");
+                // Console.WriteLine("Books saved to file successfully.");
             }
             catch (Exception ex)
             {
@@ -536,7 +601,7 @@ namespace BasicLibrary
                             var parts = line.Split('|');
                             if (parts.Length == 3)
                             {
-                                BookName.Add((parts[0], parts[1],int.Parse(parts[2])));
+                                BookName.Add((parts[0], parts[1], int.Parse(parts[2])));
                             }
 
                         }
@@ -646,7 +711,7 @@ namespace BasicLibrary
             for (int i = 0; i < UserReg.Count; i++)
             {
                 UserNumber = i + 1;
-                sb5.Append("Admin ").Append(UserNumber).Append(" name : ").Append(AdminReg[i].Email);
+                sb5.Append("Admin").Append(" Email: ").Append(AdminReg[i].Email);
                 sb5.AppendLine();
                 sb5.AppendLine();
                 Console.WriteLine(sb5.ToString());
@@ -656,16 +721,37 @@ namespace BasicLibrary
         }
         static void AddUser()
         {
+            Console.WriteLine("Enter Your Name");
+            string UserName=Console.ReadLine();
+
             Console.WriteLine("Enter User Email");
             string emailUser = Console.ReadLine();
 
-            Console.WriteLine("Enter User Password");
-            string UserPass = Console.ReadLine();
+            bool UserExist = false;
+            for (int i = 0; UserReg.Count > i; i++) 
+            {
+                if (UserReg[i].Email.Contains(emailUser))
+                {
+                    UserExist = true;
 
+                }
+            }
+            if (!UserExist)
+            {
+                Console.WriteLine("Enter User Password");
+                string UserPass = Console.ReadLine();
+                int IDCounter;
+                if (UserReg.Count > 0)
+                {
+                    IDCounter = UserReg[UserReg.Count - 1].Id + 1;
+                }
+                else { IDCounter = 1; }
 
-            UserReg.Add((emailUser, UserPass));
+                UserReg.Add((IDCounter, UserName, emailUser, UserPass));
 
-            Console.WriteLine("User Added Succefully");
+                Console.WriteLine("User Added Succefully");
+            }
+            else Console.WriteLine("User Exist");
         }
         static void UserRegestration()
         {
@@ -675,10 +761,10 @@ namespace BasicLibrary
                 {
                     foreach (var user in UserReg)
                     {
-                        writer2.WriteLine($"{user.Email}|{user.Password}");
+                        writer2.WriteLine($"{user.Id}|{user.Name}|{user.Email}|{user.Password}");
                     }
                 }
-                Console.WriteLine("User saved to file successfully.");
+                //Console.WriteLine("User saved to file successfully.");
             }
             catch (Exception ex)
             {
@@ -689,7 +775,7 @@ namespace BasicLibrary
         {
             try
             {
-                if (File.Exists(filePath))
+                if (File.Exists(UserFile))
                 {
                     using (StreamReader reader2 = new StreamReader(UserFile))
                     {
@@ -697,15 +783,15 @@ namespace BasicLibrary
                         while ((line = reader2.ReadLine()) != null)
                         {
                             var parts = line.Split('|');
-                            if (parts.Length == 2)
+                            if (parts.Length == 4)
                             {
-                                UserReg.Add((parts[0], parts[1]));
+                                UserReg.Add((int.Parse(parts[0]), parts[1], parts[2], parts[3]));
                             }
 
                         }
                     }
 
-                    Console.WriteLine("User loaded from file successfully.");
+                    //Console.WriteLine("User loaded from file successfully.");
                 }
             }
             catch (Exception ex)
@@ -759,9 +845,28 @@ namespace BasicLibrary
                 Console.WriteLine($"Error loading from file: {ex.Message}");
             }
         }
-        static void UsersLists()
+        static void UsersListsAppend()// User Details Appending Function.
         {
+            StringBuilder sb7 = new StringBuilder();
 
+            int BookNumber = 0;
+
+            for (int i = 0; i < UserReg .Count; i++)
+            {
+                BookNumber = i + 1;
+                sb7.Append("User ID: ").Append(UserReg[i].Id);
+                sb7.AppendLine();
+                sb7.Append("User Name: ").Append(UserReg[i].Name);
+                sb7.AppendLine();
+                sb7.Append("User Email: ").Append(UserReg[i].Email);
+                sb7.AppendLine();
+                sb7.Append("User Password:  ").Append(UserReg[i].Password);
+                sb7.AppendLine();
+                sb7.AppendLine();
+                Console.WriteLine(sb7.ToString());
+                sb7.Clear();
+
+            }
 
 
 
@@ -769,7 +874,7 @@ namespace BasicLibrary
 
 
         }
-        static void UsersBorrowLists ()
+        static void UsersBorrowLists()
         {
             try
             {
@@ -797,7 +902,6 @@ namespace BasicLibrary
                 Console.WriteLine($"Error loading from file: {ex.Message}");
             }
         }
-
         static void UsersInfoAppend()
         {
             StringBuilder sb4 = new StringBuilder();
@@ -807,13 +911,12 @@ namespace BasicLibrary
             for (int i = 0; i < Users.Count; i++)
             {
                 BookNumber = i + 1;
-                sb4.Append("Book ").Append(BookNumber).Append(" name : ").Append(Users[i].User);
+                sb4.Append("User ").Append("Email: ").Append(Users[i].User);
                 sb4.AppendLine();
-                sb4.Append("Book ").Append(BookNumber).Append(" Author : ").Append(Users[i].Bookk);
+
+                sb4.Append("Borrowed Book").Append(" Name: ").Append(Users[i].Bookk);
                 sb4.AppendLine();
-                sb4.Append("Book ").Append(BookNumber).Append(" ID : ").Append(Users[i].Qnt);
-                sb4.AppendLine();
-                sb4.Append("Book ").Append(BookNumber).Append(" Quantity : ").Append(Users[i].Qnt);
+                sb4.Append("Borrowed Book ").Append("Quantity: ").Append(Users[i].Qnt);
                 sb4.AppendLine();
                 sb4.AppendLine();
                 Console.WriteLine(sb4.ToString());
@@ -823,7 +926,7 @@ namespace BasicLibrary
         }
         static void Recomandation()
         {
-            
+
             int index1;
             StringBuilder Quant1 = new StringBuilder();
             for (int i = 0; i < BookName.Count; i++)
@@ -834,7 +937,7 @@ namespace BasicLibrary
             Reccomanded.Sort((t1, t2) => t2.BQNT.CompareTo(t1.BQNT));
             for (int i = 0; i < Reccomanded.Count; i++)
             {
-                Quant1.AppendLine("Book Name: "+Reccomanded[i].Bname2+" \nQuantity of Borrowed Books By People: " + Reccomanded[i].BQNT);
+                Quant1.AppendLine("Book Name: " + Reccomanded[i].Bname2 + " \nQuantity of Borrowed Books By People: " + Reccomanded[i].BQNT);
                 Quant1.AppendLine();
 
                 if (i >= 2) break;
@@ -845,8 +948,8 @@ namespace BasicLibrary
             int Select = int.Parse(Console.ReadLine());
             if (Select == 1)
             {
-                Console.WriteLine("Which one?");
-                SearchWithBorrow();
+
+                SearchWithBorrow2();
 
             }
             else
@@ -854,6 +957,37 @@ namespace BasicLibrary
                 Console.Clear();
                 Console.WriteLine("Thank you for Time");
             }
+        }
+        static void Riddle()
+        {
+            Console.WriteLine("Solve the riddle to enter:)");
+            int IqCounter = 1;
+            bool GG = false;
+            do
+            {
+                Console.WriteLine("It cannot be seen, cannot be felt,\r\nCannot be heard, cannot be smelt.\r\nIt lies behind stars and under hills,\r\nAnd empty holes it fills.\r\nIt comes out first and follows after,\r\nEnds life, kills laughter. \nAnswer: ");
+                string Answer = Console.ReadLine();
+                if (Answer == "Dark" || Answer == "dark")
+                {
+                    Console.WriteLine("You are smart");
+                    Console.Clear();
+                    MasterMenu();
+                    GG = true;
+                }
+                else
+                {
+                    if (IqCounter <= 2)
+                    {
+                        Console.WriteLine($"try again to test you IQ level (number of tries left:{3 - IqCounter}):");
+                    }
+                    IqCounter++;
+                    if (IqCounter >= 4) { Console.WriteLine("its heart breaking to get know that this much stupid you are :( ");
+                        Console.ReadKey();
+                        Console.Clear();
+                        break; }
+
+                }
+            } while (GG == false);
         }
     }
 }
