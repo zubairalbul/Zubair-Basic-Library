@@ -8,7 +8,7 @@ namespace BasicLibrary
     internal class Program
     {
         static string currentUser;
-        static List<(string BName, string BAuthor, int ID, int Qnt)> Books = new List<(string BName, string BAuthor, int ID, int Qnt)>();
+        static List<(int IDS, string BName, string BAuthor, int ID, int Qnt)> Books = new List<(int IDS, string BName, string BAuthor, int ID, int Qnt)>();
         static List<(int Id, string Name, string Email, string Password)> UserReg = new List<(int Id, string Name, string Email, string Password)>();
         static List<(string Email, string Password)> AdminReg = new List<(string Email, string Password)>();
         static List<(string Email, string Password)> MasterReg = new List<(string Email, string Password)>();
@@ -312,19 +312,41 @@ namespace BasicLibrary
 
             Console.WriteLine("Enter Book Name");
             string name = Console.ReadLine();
+            bool BookExist = false;
+            for (int i = 0; Books.Count > i; i++) 
+            {
+                if (Books[i].BName.Contains(name))
+                {
+                    BookExist = true;
 
-            Console.WriteLine("Enter Book Author");
+                }
+            }
+            if (!BookExist)
+            {
+                 Console.WriteLine("Enter Book Author");
             string author = Console.ReadLine();
-
-            Console.WriteLine("Enter Book ID");
+             Console.WriteLine("Enter Book ID");
             int ID = int.Parse(Console.ReadLine());
 
-            Console.WriteLine("Enter Book Quantity");
+            Console.WriteLine("Enter Number of Book Copies");
             int Qnt = int.Parse(Console.ReadLine());
 
-            Books.Add((name, author, ID, Qnt));
+                int IDCounter;
+                if (Books.Count > 0)
+                {
+                    IDCounter = Books[Books.Count - 1].IDS + 1;
+                }
+                else { IDCounter = 1; }
+
+                Books.Add((IDCounter, name, author, ID, Qnt));
 
             Console.WriteLine("Book Added Succefully");
+            }
+            else Console.WriteLine("Book Already Exist");
+
+
+
+
 
 
         }// adding book menu
@@ -337,6 +359,7 @@ namespace BasicLibrary
             for (int i = 0; i < Books.Count; i++)
             {
                 BookNumber = i + 1;
+                sb.Append("Book ID: "+Books[i].IDS);
                 sb.Append("Book ").Append(BookNumber).Append(" name : ").Append(Books[i].BName);
                 sb.AppendLine();
                 sb.Append("Book ").Append(BookNumber).Append(" Author : ").Append(Books[i].BAuthor);
@@ -386,7 +409,7 @@ namespace BasicLibrary
                 {
                     if (h == Books[i].BName)
                     {
-                        Books[i] = (Books[i].BName, Books[i].BAuthor, Books[i].ID, (Books[i].Qnt - 1));
+                        Books[i] = (Books[i].IDS, Books[i].BName, Books[i].BAuthor, Books[i].ID, (Books[i].Qnt - 1));
                         SaveBooksToFile();
                         BookName.Add((currentUser, Books[i].BName, Books[i].Qnt));
                         Borrowedbooks();
@@ -402,7 +425,7 @@ namespace BasicLibrary
         }
         static void SearchWithBorrow2()
         {
-            int BS;
+           
             //Console.Clear();
 
             string h = SearchForBook2();
@@ -411,16 +434,15 @@ namespace BasicLibrary
 
             if (UserChoice == 1)
             {
-                Console.WriteLine("Enter the quantity: ");
-                BS = int.Parse(Console.ReadLine());
+                
 
                 for (int i = 0; i < Books.Count; i++)
                 {
                     if (h == Books[i].BName)
                     {
-                        Books[i] = (Books[i].BName, Books[i].BAuthor, Books[i].ID, (Books[i].Qnt - BS));
+                        Books[i] = (Books[i].IDS, Books[i].BName, Books[i].BAuthor, Books[i].ID, (Books[i].Qnt - 1));
                         SaveBooksToFile();
-                        BookName.Add((currentUser, Books[i].BName, BS));
+                        BookName.Add((currentUser, Books[i].BName, Books[i].Qnt));
                         Borrowedbooks();
 
                     }
@@ -491,9 +513,9 @@ namespace BasicLibrary
                         while ((line = reader.ReadLine()) != null)
                         {
                             var parts = line.Split('|');
-                            if (parts.Length == 4)
+                            if (parts.Length == 5)
                             {
-                                Books.Add((parts[0], parts[1], int.Parse(parts[2]), int.Parse(parts[3])));
+                                Books.Add((int.Parse(parts[0]), parts[1], parts[2], int.Parse(parts[3]), int.Parse(parts[4])));
                             }
 
                         }
@@ -516,7 +538,7 @@ namespace BasicLibrary
                 {
                     foreach (var book in Books)
                     {
-                        writer.WriteLine($"{book.BName}|{book.BAuthor}|{book.ID}|{book.Qnt}");
+                        writer.WriteLine($"{book.IDS}|{book.BName}|{book.BAuthor}|{book.ID}|{book.Qnt}");
                     }
                 }
                 // Console.WriteLine("Books saved to file successfully.");
@@ -544,7 +566,7 @@ namespace BasicLibrary
                     int BS = int.Parse(Console.ReadLine());
                     if (CS == 1)
                     {
-                        Books[i] = (Books[i].BName, Books[i].BAuthor, Books[i].ID, Books[i].Qnt - BS);
+                        Books[i] = (Books[i].IDS, Books[i].BName, Books[i].BAuthor, Books[i].ID, (Books[i].Qnt - BS));
 
                         SaveBooksToFile();
                         BookName.Add((currentUser, Books[i].BName, BS));
@@ -630,7 +652,7 @@ namespace BasicLibrary
                     int CS = int.Parse(Console.ReadLine());
                     if (CS == 1)
                     {
-                        Books[i] = (Books[i].BName, Books[i].BAuthor, Books[i].ID, Books[i].Qnt + 1);
+                        Books[i] = (Books[i].IDS, Books[i].BName, Books[i].BAuthor, Books[i].ID, (Books[i].Qnt - 1));
                         Console.WriteLine("Returning Book Was Succesfully Done.");
 
                     }
