@@ -8,20 +8,23 @@ namespace BasicLibrary
     internal class Program
     {
         static string currentUser;
-        static List<(int IDS, string BName, string BAuthor, int ID, int Qnt)> Books = new List<(int IDS, string BName, string BAuthor, int ID, int Qnt)>();
-        static List<(int Id, string Name, string Email, string Password)> UserReg = new List<(int Id, string Name, string Email, string Password)>();
-        static List<(string Email, string Password)> AdminReg = new List<(string Email, string Password)>();
-        static List<(string Email, string Password)> MasterReg = new List<(string Email, string Password)>();
-        static List<(string User, string BookN, int Quantity)> BookName = new List<(string user, string BookN, int Quantity)>();
-        static List<(string User, string Bookk, int Qnt)> Users = new List<(string User, string Bookk, int Qnt)>();
-        static List<(string Bname2, int BQNT)> Reccomanded = new List<(string Bname2, int BQNT)>();
-        static string filePath = "C:\\Users\\Codeline User\\Desktop\\Zubair\\Lib.txt";
-        static string UserFile = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibUser.txt";
-        static string AdminFile = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibAdmin.txt";
-        static string MasterFile = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibMaster.txt";
-        static string BorrowedBook = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibBorrowed.txt";
-        static string UserLists = "C:\\Users\\Codeline User\\Desktop\\Zubair\\UserList.txt";
-
+        static List<(int IDS, string BName, string BAuthor, int Qnt, int BorrowedCopies, Decimal Price, string BookCategory, int Period)> Books = new List<(int IDS, string BName, string BAuthor, int Qnt, int BorrowedCopies, decimal Price, string BookCategory, int Period)>();//Books List
+        static List<(int Id, string Name, string Email, string Password)> UserReg = new List<(int Id, string Name, string Email, string Password)>();//User List
+        static List<(int AdminID, string AdminName, string Email, string Password)> AdminReg = new List<(int AdminID, string AdminName, string Email, string Password)>();//Admin List
+        static List<(string Email, string Password)> MasterReg = new List<(string Email, string Password)>();// Master List
+        static List<(int CataID, string CataName, int NoBooks)> Catagory = new List<(int CataID, string CataName, int NoBooks)>();//Category List
+        static List<(string User, string BookN, int Quantity)> BookName = new List<(string user, string BookN, int Quantity)>();//view All Books
+        static List<(string User, string Bookk, int Qnt)> Users = new List<(string User, string Bookk, int Qnt)>();// User List With Borrowed Books
+        static List<(int UID, int BID, DateTime BorrowDates, DateTime ReturnDate, DateTime ActualReturnDate, int rating, bool IsReturened)> Borrowing = new List<(int UID, int BID, DateTime BorrowDates, DateTime ReturnDate, DateTime ActualReturnDate, int rating, bool IsReturened)>();
+        static List<(string Bname2, int BQNT)> Reccomanded = new List<(string Bname2, int BQNT)>();// Recommendations
+        static string filePath = "C:\\Users\\Codeline User\\Desktop\\Zubair\\Lib.txt";//Books File
+        static string Categories = "C:\\Users\\Codeline User\\Desktop\\Zubair\\Categories.txt";//Categories File
+        static string UserFile = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibUser.txt";// User Registration Files
+        static string AdminFile = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibAdmin.txt";// Admin Registration File
+        static string MasterFile = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibMaster.txt";// Master Registration 
+        static string BorrowedBook = "C:\\Users\\Codeline User\\Desktop\\Zubair\\LibBorrowed.txt";// Borrowed Books Files
+        static string UserLists = "C:\\Users\\Codeline User\\Desktop\\Zubair\\UserList.txt";// Users List
+        static string BorrowingFile = "C:\\Users\\Codeline User\\Desktop\\Zubair\\BorrowingFile.txt";//Borrowing File
         static void Main(string[] args)
         {
             ReadAdmins();
@@ -108,7 +111,7 @@ namespace BasicLibrary
 
                 }
                 Console.WriteLine("press any key to continue");
-                string conts = Console.ReadLine();
+                 Console.ReadKey();
                 Console.Clear();
             } while (ExFlag != true);
 
@@ -199,7 +202,7 @@ namespace BasicLibrary
 
             }
 
-        }// make it as a resource for adminn appending 
+        }// make it as a resource for admin appending 
         static void AdminMenu()
         {
 
@@ -281,7 +284,7 @@ namespace BasicLibrary
                     case 2:
                         Console.Clear();
                         ViewAllBooks();
-                        Recomandation();
+                        
                         break;
 
                     case 3:
@@ -307,9 +310,11 @@ namespace BasicLibrary
 
             } while (ExitFlag != true);
         }//User options Menu
+
+
         static void AddnNewBook()
         {
-
+            int BorroededCopes = 0;
             Console.WriteLine("Enter Book Name");
             string name = Console.ReadLine();
             bool BookExist = false;
@@ -330,6 +335,16 @@ namespace BasicLibrary
 
             Console.WriteLine("Enter Number of Book Copies");
             int Qnt = int.Parse(Console.ReadLine());
+                Console.WriteLine("Borrowed Copies By Default 0");
+                int Borr=int.Parse(Console.ReadLine());
+                int n=BorroededCopes + Borr;
+            Console.WriteLine("Price of the Book: ");
+                Decimal BookPrice=Decimal.Parse(Console.ReadLine());
+                Console.WriteLine("Which Category: ");
+                string BookCategory=Console.ReadLine();
+                Console.WriteLine("Enter the number of days the book can be borrowed: ");
+                int BorrowingPeriod=int.Parse(Console.ReadLine());
+
 
                 int IDCounter;
                 if (Books.Count > 0)
@@ -338,7 +353,7 @@ namespace BasicLibrary
                 }
                 else { IDCounter = 1; }
 
-                Books.Add((IDCounter, name, author, ID, Qnt));
+                Books.Add((IDCounter, name, author, Qnt, n, BookPrice, BookCategory, BorrowingPeriod));
 
             Console.WriteLine("Book Added Succefully");
             }
@@ -359,14 +374,14 @@ namespace BasicLibrary
             for (int i = 0; i < Books.Count; i++)
             {
                 BookNumber = i + 1;
-                sb.Append("Book ID: "+Books[i].IDS);
-                sb.Append("Book ").Append(BookNumber).Append(" name : ").Append(Books[i].BName);
-                sb.AppendLine();
-                sb.Append("Book ").Append(BookNumber).Append(" Author : ").Append(Books[i].BAuthor);
-                sb.AppendLine();
-                sb.Append("Book ").Append(BookNumber).Append(" ID : ").Append(Books[i].ID);
-                sb.AppendLine();
-                sb.Append("Book ").Append(BookNumber).Append(" Quantity : ").Append(Books[i].Qnt);
+                sb.Append("Book ID:"+Books[i].IDS); sb.Append("|Book ").Append("name:").Append(Books[i].BName); 
+                sb.Append("|Book").Append("Author:").Append(Books[i].BAuthor);
+                
+                sb.Append("|Book ").Append("Copies:").Append(Books[i].Qnt);
+                sb.Append("|Borrowed Copies:").Append(Books[i].BorrowedCopies);
+                sb.Append("|Price of the Book:").Append(Books[i].Price);
+                sb.Append("|Category of the Book:").Append(Books[i].BookCategory);
+                sb.Append("|Book must be return by:").Append(Books[i].Period);
                 sb.AppendLine();
                 sb.AppendLine();
                 Console.WriteLine(sb.ToString());
@@ -407,40 +422,9 @@ namespace BasicLibrary
 
                 for (int i = 0; i < Books.Count; i++)
                 {
-                    if (h == Books[i].BName)
+                    if (h.Trim() == Books[i].BName.Trim())
                     {
-                        Books[i] = (Books[i].IDS, Books[i].BName, Books[i].BAuthor, Books[i].ID, (Books[i].Qnt - 1));
-                        SaveBooksToFile();
-                        BookName.Add((currentUser, Books[i].BName, Books[i].Qnt));
-                        Borrowedbooks();
-
-                    }
-                }
-            }
-            else if (UserChoice == 2 || UserChoice != 1)
-            {
-                Console.Clear();
-                Console.WriteLine("Thank you For Your Time");
-            }
-        }
-        static void SearchWithBorrow2()
-        {
-           
-            //Console.Clear();
-
-            string h = SearchForBook2();
-            Console.WriteLine("Do You want to Borrow it? \n 1. Yes \n 2. No");
-            int UserChoice = int.Parse(Console.ReadLine());
-
-            if (UserChoice == 1)
-            {
-                
-
-                for (int i = 0; i < Books.Count; i++)
-                {
-                    if (h == Books[i].BName)
-                    {
-                        Books[i] = (Books[i].IDS, Books[i].BName, Books[i].BAuthor, Books[i].ID, (Books[i].Qnt - 1));
+                        Books[i] = (Books[i].IDS, Books[i].BName, Books[i].BAuthor, (Books[i].Qnt - 1), (Books[i].BorrowedCopies + 1), Books[i].Price, Books[i].BookCategory, Books[i].Period);
                         SaveBooksToFile();
                         BookName.Add((currentUser, Books[i].BName, Books[i].Qnt));
                         Borrowedbooks();
@@ -456,41 +440,18 @@ namespace BasicLibrary
         }
         static string SearchForBook()
         {
-
-            Console.WriteLine("Enter the book name you want");
-            string name = Console.ReadLine();
             ViewAllBooks();
-
-            bool flag = false;
-
-            for (int i = 0; i < Books.Count; i++)
-            {
-                if (Books[i].BName == name)
-                {
-                    Console.WriteLine("Book Author is : " + Books[i].BAuthor + "Book ID: " + Books[i].ID);
-                    flag = true;
-                    return name;
-                    break;
-                }
-            }
-
-            if (flag != true)
-            { Console.WriteLine("book not found"); }
-            return null;
-        }
-        static string SearchForBook2()
-        {
-            // LoadBooksFromFile();
-            // ViewAllBooks();
             Console.WriteLine("Enter the book name you want");
             string name = Console.ReadLine();
+            
+
             bool flag = false;
 
             for (int i = 0; i < Books.Count; i++)
             {
-                if (Books[i].BName == name)
+                if (Books[i].BName.Trim() == name.Trim())
                 {
-                    Console.WriteLine("Book Author is : " + Books[i].BAuthor + "Book ID: " + Books[i].ID);
+                    Console.WriteLine("Book Name" + Books[i].BName + "Book Author is : " + Books[i].BAuthor + "Book ID: " + Books[i].IDS );
                     flag = true;
                     return name;
                     break;
@@ -513,9 +474,9 @@ namespace BasicLibrary
                         while ((line = reader.ReadLine()) != null)
                         {
                             var parts = line.Split('|');
-                            if (parts.Length == 5)
+                            if (parts.Length == 8)
                             {
-                                Books.Add((int.Parse(parts[0]), parts[1], parts[2], int.Parse(parts[3]), int.Parse(parts[4])));
+                                Books.Add((int.Parse(parts[0]), parts[1], parts[2], int.Parse(parts[3]), int.Parse(parts[4]), decimal.Parse(parts[5]), parts[6], int.Parse(parts[7])));
                             }
 
                         }
@@ -538,7 +499,7 @@ namespace BasicLibrary
                 {
                     foreach (var book in Books)
                     {
-                        writer.WriteLine($"{book.IDS}|{book.BName}|{book.BAuthor}|{book.ID}|{book.Qnt}");
+                        writer.WriteLine($"{book.IDS}|{book.BName}|{book.BAuthor}|{book.Qnt}|{book.BorrowedCopies}|{book.Price}|{book.BookCategory}|{book.Period}");
                     }
                 }
                 // Console.WriteLine("Books saved to file successfully.");
@@ -548,7 +509,7 @@ namespace BasicLibrary
                 Console.WriteLine($"Error saving to file: {ex.Message}");
             }
         }
-        static void BorrowBook()
+        static void BorrowBook()    
         {
             bool flag = false;
             int Index;
@@ -559,18 +520,19 @@ namespace BasicLibrary
             {
                 if (BookNames == Books[i].BName)
                 {
-                    Console.WriteLine("Book name " + Books[i].BName + "\t Book ID: " + Books[i].ID);
+                    Console.WriteLine("Book name: " + Books[i].BName + "\t Book ID: " + Books[i].IDS);
                     Console.WriteLine("Borrow? \n 1. Yes \n 2. No");
                     int CS = int.Parse(Console.ReadLine());
                     Console.WriteLine("Enter the quantity You want");
                     int BS = int.Parse(Console.ReadLine());
                     if (CS == 1)
                     {
-                        Books[i] = (Books[i].IDS, Books[i].BName, Books[i].BAuthor, Books[i].ID, (Books[i].Qnt - BS));
+                        Books[i] = (Books[i].IDS, Books[i].BName, Books[i].BAuthor, (Books[i].Qnt), (Books[i].BorrowedCopies + 1), Books[i].Price, Books[i].BookCategory, Books[i].Period);
 
                         SaveBooksToFile();
+                        Borrowing.Add((Borrowing[i].UID, Borrowing[i].BID, DateTime.Now, DateTime.Now.AddDays(Books[i].Period), Borrowing[i].ActualReturnDate, Borrowing[i].rating, false));
                         BookName.Add((currentUser, Books[i].BName, BS));
-                        Borrowedbooks();
+                        WriteBorrowing();
                         Console.WriteLine("Borrowing Was Succesfully Done.");
                     }
                     else if (CS == 2)
@@ -645,14 +607,14 @@ namespace BasicLibrary
             int BID = int.Parse(Console.ReadLine());
             for (int i = 0; i < Books.Count; i++)
             {
-                if (BookName == Books[i].BName && BID == Books[i].ID)
+                if (BookName == Books[i].BName && BID == Books[i].IDS)
                 {
                     Console.WriteLine("Book ID and Name Is Correct");
                     Console.WriteLine("Return? \n 1. Yes \n 2. No");
                     int CS = int.Parse(Console.ReadLine());
                     if (CS == 1)
                     {
-                        Books[i] = (Books[i].IDS, Books[i].BName, Books[i].BAuthor, Books[i].ID, (Books[i].Qnt - 1));
+                        Books[i] = (Books[i].IDS, Books[i].BName, Books[i].BAuthor, (Books[i].Qnt), (Books[i].BorrowedCopies - 1), Books[i].Price, Books[i].BookCategory, Books[i].Period);
                         Console.WriteLine("Returning Book Was Succesfully Done.");
 
                     }
@@ -666,6 +628,60 @@ namespace BasicLibrary
                 }
             }
         }
+        static void WriteBorrowing()
+        {
+            try
+            {
+                using (StreamWriter writer5 = new StreamWriter(BorrowingFile, true))
+                {
+                    foreach (var Cbook in Borrowing)
+                    {
+                        
+                        writer5.WriteLine($"{Cbook.UID}|{Cbook.BID}|{Cbook.BorrowDates}|{Cbook.ReturnDate}|{Cbook.ActualReturnDate}|{Cbook.rating}|{Cbook.IsReturened}");
+                    }
+                }
+                Console.WriteLine("Books Borrowing Details saved to file successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving to file: {ex.Message}");
+            }
+        }
+        static void ReadBorrowing()
+        {
+            if (File.Exists(BorrowingFile))
+            {
+                using (StreamReader reader = new StreamReader(BorrowingFile))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        var parts = line.Split('|');
+                        if (parts.Length == 7)
+                        {
+                            Borrowing.Add((int.Parse(parts[0]),int.Parse(parts[1]), DateTime.Parse(parts[2]), DateTime.Parse(parts[3]), DateTime.Parse(parts[4]), int.Parse(parts[5]), bool.Parse(parts[6])));
+                        }
+
+                    }
+                }
+
+
+            }
+        }
+        static void AppendBorrowing()
+        {
+            StringBuilder sb8 = new StringBuilder();
+            int BowrroedNumber = 0;
+            for (int i = 0; i < BookName.Count; i++)
+            {
+                BowrroedNumber = i + 1;
+                sb8.Append("User ID: " + Borrowing[i].UID + "\t Book ID: " + Borrowing[i].BID + "\t Borrow Date: " + Borrowing[i].BorrowDates + "\t Book Returned by: " + Borrowing[i].ReturnDate).AppendLine("The Bool Actual Return Date Is: " + Borrowing[i].ActualReturnDate + "\t Rating of the Book: " + Borrowing[i].rating + "\t Condition of returning the Borrowed Book: " + Borrowing[i].IsReturened);
+
+                Console.WriteLine(sb8.ToString());
+            }
+        }
+
+
         static void AdminRegestration()
         {
             try
@@ -674,7 +690,7 @@ namespace BasicLibrary
                 {
                     foreach (var admin in AdminReg)
                     {
-                        writer1.WriteLine($"{admin.Email}|{admin.Password}");
+                        writer1.WriteLine($"{admin.AdminID}|{admin.AdminName}|{admin.Email}|{admin.Password}");
                     }
                 }
 
@@ -686,14 +702,22 @@ namespace BasicLibrary
         }
         static void AddAdmin()
         {
-            Console.WriteLine("Enter Admin Email");
+            Console.WriteLine("Enter Admin Name: ");
+            string AdminN=Console.ReadLine();
+            Console.WriteLine("Enter Admin Email: ");
             string emailAdmin = Console.ReadLine();
 
-            Console.WriteLine("Enter Admin Password");
+            Console.WriteLine("Enter Admin Password: ");
             string AdminPass = Console.ReadLine();
 
+            int IDCounter;
+            if (AdminReg.Count > 0)
+            {
+                IDCounter = AdminReg[AdminReg.Count - 1].AdminID + 1;
+            }
+            else { IDCounter = 1; }
 
-            AdminReg.Add((emailAdmin, AdminPass));
+            AdminReg.Add((IDCounter, AdminN, emailAdmin, AdminPass));
 
             Console.WriteLine("Admin Added Succefully");
         }
@@ -701,7 +725,7 @@ namespace BasicLibrary
         {
             try
             {
-                if (File.Exists(filePath))
+                if (File.Exists(AdminFile))
                 {
                     using (StreamReader reader1 = new StreamReader(AdminFile))
                     {
@@ -709,9 +733,9 @@ namespace BasicLibrary
                         while ((line = reader1.ReadLine()) != null)
                         {
                             var parts = line.Split('|');
-                            if (parts.Length == 2)
+                            if (parts.Length == 4)
                             {
-                                AdminReg.Add((parts[0], parts[1]));
+                                AdminReg.Add((int.Parse(parts[0]), parts[1], parts[2], parts[3]));
                             }
 
                         }
@@ -733,7 +757,7 @@ namespace BasicLibrary
             for (int i = 0; i < UserReg.Count; i++)
             {
                 UserNumber = i + 1;
-                sb5.Append("Admin").Append(" Email: ").Append(AdminReg[i].Email);
+                sb5.Append(" |Admin Email:").Append(AdminReg[i].Email).Append("\t|Admin Password:").Append(AdminReg[i].Password).Append("\t|Admin Name:").Append(AdminReg[i].AdminName);
                 sb5.AppendLine();
                 sb5.AppendLine();
                 Console.WriteLine(sb5.ToString());
@@ -741,6 +765,8 @@ namespace BasicLibrary
 
             }
         }
+
+
         static void AddUser()
         {
             Console.WriteLine("Enter Your Name");
@@ -821,6 +847,8 @@ namespace BasicLibrary
                 Console.WriteLine($"Error loading from file: {ex.Message}");
             }
         }
+
+
         static void MasterWriter()
         {
             try
@@ -867,6 +895,8 @@ namespace BasicLibrary
                 Console.WriteLine($"Error loading from file: {ex.Message}");
             }
         }
+
+
         static void UsersListsAppend()// User Details Appending Function.
         {
             StringBuilder sb7 = new StringBuilder();
@@ -946,6 +976,8 @@ namespace BasicLibrary
 
             }
         }
+
+
         static void Recomandation()
         {
 
@@ -978,6 +1010,62 @@ namespace BasicLibrary
             {
                 Console.Clear();
                 Console.WriteLine("Thank you for Time");
+            }
+        }
+
+
+        static string SearchForBook2()
+        {
+            // LoadBooksFromFile();
+            // ViewAllBooks();
+            Console.WriteLine("Enter the book name you want");
+            string name = Console.ReadLine();
+            bool flag = false;
+
+            for (int i = 0; i < Books.Count; i++)
+            {
+                if (Books[i].BName == name)
+                {
+                    Console.WriteLine("Book Name: " + Books[i].BName + "Book Author is : " + Books[i].BAuthor + "Book ID: " + Books[i].IDS);
+                    flag = true;
+                    return name;
+                    break;
+                }
+            }
+
+            if (flag != true)
+            { Console.WriteLine("book not found"); }
+            return null;
+        }
+        static void SearchWithBorrow2()
+        {
+
+            //Console.Clear();
+
+            string h = SearchForBook2();
+            Console.WriteLine("Do You want to Borrow it? \n 1. Yes \n 2. No");
+            int UserChoice = int.Parse(Console.ReadLine());
+
+            if (UserChoice == 1)
+            {
+
+
+                for (int i = 0; i < Books.Count; i++)
+                {
+                    if (h == Books[i].BName)
+                    {
+                        Books[i] = (Books[i].IDS, Books[i].BName, Books[i].BAuthor, (Books[i].Qnt - 1), (Books[i].BorrowedCopies + 1), Books[i].Price, Books[i].BookCategory, Books[i].Period);
+                        SaveBooksToFile();
+                        // BookName.Add((Books[i].IDS, Books[i].BName, Books[i].BAuthor));
+                        WriteBorrowing();
+
+                    }
+                }
+            }
+            else if (UserChoice == 2 || UserChoice != 1)
+            {
+                Console.Clear();
+                Console.WriteLine("Thank you For Your Time");
             }
         }
         static void Riddle()
